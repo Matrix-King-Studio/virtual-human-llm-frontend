@@ -1,42 +1,36 @@
 <script setup>
-import { Base64 } from "js-base64";
-import VMS from "./libs/web-2d-sdk-1.1.0/sdk/vms-2d-web-sdk-1.1.0.esm.min";
-import { ElMessage } from "element-plus";
-import { ref, onMounted } from "vue";
+import {Base64} from "js-base64";
+import {ElMessage} from "element-plus";
+import {ref, onMounted} from "vue";
 import axios from "axios";
-const cubism2Model =
-  "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
+
 const cubism4Model =
-  "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json";
+    "https://cdn.jsdelivr.net/gh/nladuo/live2d-chatbot-demo@main/dist/assets/haru/haru_greeter_t03.model3.json";
+// const cubism4Model = "./src/assets/json/haru_greeter_t03.model3.json"
+
 let model4;
 onMounted(() => {
   const virtualHuman = async () => {
     const app = new PIXI.Application({
       view: document.getElementById("canvas"),
       autoStart: true,
-
       backgroundColor: 0xffffff,
-
-      width: "700",
-      height: "400",
     });
 
     model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
-
+    model4.x = -200;
+    model4.y = -100;
     app.stage.addChild(model4);
-
-    model4.scale.set(0.3);
+    model4.scale.set(0.5);
   };
   virtualHuman();
 });
 const setMouthOpenY = (v) => {
   v = Math.max(0, Math.min(1, v));
-  console.log(model4.internalModel.coreModel.setParameterValueById);
   model4.internalModel.coreModel.setParameterValueById("ParamMouthOpenY", v);
 };
-let res_id;
 
-//new
+let res_id;
 const drawer1 = ref(false);
 const drawer2 = ref(false);
 const selectedRowIndex = null;
@@ -67,19 +61,23 @@ function translateAudio(text) {
   const API_KEY = "a50e10629e5399e23dd63410dc0e315f";
 
   const audioPlayer = new AudioPlayer("../public/dist");
-  let intervalId;
+  let intervalOpen;
+  let intervalClose;
   audioPlayer.onPlay = () => {
-    setMouthOpenY(1);
-    // intervalId=setInterval(function(){
-    //   setMouthOpenY(1)
-    // },300);
-    // 启动循环执行的函数b
-    // 在函数a执行结束时，停止循环执行的函数b
+    intervalOpen=setInterval(function(){
+      setMouthOpenY(1)
+    },200);
+    intervalClose=setInterval(function(){
+      setMouthOpenY(0)
+    },250);
   };
   audioPlayer.onStop = (audioDatas) => {
-    // clearInterval(intervalId)
+    clearInterval(intervalOpen)
+    clearInterval(intervalClose)
+    setMouthOpenY(0)
     console.log(audioDatas);
   };
+
   function getWebSocketUrl(apiKey, apiSecret) {
     var url = "wss://tts-api.xfyun.cn/v2/tts";
     var host = location.host;
@@ -94,6 +92,7 @@ function translateAudio(text) {
     url = `${url}?authorization=${authorization}&date=${date}&host=${host}`;
     return url;
   }
+
   function encodeText(text, type) {
     if (type === "unicode") {
       let buf = new ArrayBuffer(text.length * 4);
@@ -183,32 +182,10 @@ function translateAudio(text) {
       // console.log(e);
     };
   }
+
   connectWebSocket();
 }
 
-//虚拟主播
-
-// function toggleVMS() {
-//   isPlaying.value = !isPlaying.value; // 切换播放状态
-//   // 根据播放状态执行相应的操作
-//   if (isPlaying.value) {
-//     // 执行开始播放的逻辑代码
-//     startVMS();
-//     console.log(finalResult);
-
-//     console.log("开始播放");
-//   } else {
-//     // 执行停止播放的逻辑代码
-//     console.log("停止");
-//     clearTimeout(timeId);
-
-//     finalResult = [];
-
-//     console.log(finalResult, "++++++++---------");
-//     delayedLoop(finalResult);
-//     stopVMS();
-//   }
-// }
 const msg = ref(""); //输入内容
 
 // 发送消息
@@ -219,7 +196,7 @@ function sendmsg() {
 
   msg.value = audioMessage;
   if (msg.value.length < 1)
-    return ElMessage({ message: "不能发送空消息！", type: "error" });
+    return ElMessage({message: "不能发送空消息！", type: "error"});
 
   if (okToSend.value == false)
     return ElMessage({
@@ -289,10 +266,12 @@ function ruleSplitString(string, length = 25) {
 
   return result;
 }
+
 let splitResult;
 let arrWithNews;
 let arrWithoutNews
-function chatWithAi({ content }) {
+
+function chatWithAi({content}) {
   const messages = {
     messages: [
       {
@@ -313,62 +292,63 @@ function chatWithAi({ content }) {
     url: "/test.json",
     data: messages,
   })
-    .then((response) => {
-      console.log(response, "=========");
-      const { data } = response;
-      const { status, result, source, history } = data;
-      arrWithNews = source.filter(obj => obj.hasOwnProperty('news') && obj.news);
-      arrWithoutNews = source.filter(obj => !obj.hasOwnProperty('news') || !obj.news);
+      .then((response) => {
+        console.log(response, "=========");
+        const {data} = response;
+        const {status, result, source, history} = data;
+        arrWithNews = source.filter(obj => obj.hasOwnProperty('news') && obj.news);
+        arrWithoutNews = source.filter(obj => !obj.hasOwnProperty('news') || !obj.news);
 
-      finalSource = source
-      console.log(finalSource[4].news, "789456");
-      finalResult = result
-        .split(/([。.])/)
-        .filter((element) => element !== "。" && element !== ".");
+        finalSource = source
+        console.log(finalSource[4].news, "789456");
+        finalResult = result
+            .split(/([。.])/)
+            .filter((element) => element !== "。" && element !== ".");
 
-      if (status != 200) {
-        ElMessage({ message: result, type: "error" });
-      }
+        if (status != 200) {
+          ElMessage({message: result, type: "error"});
+        }
 
-      splitResult = ruleSplitString(result);
-      splitResult = splitResult.filter(function (element) {
-        return element.trim() !== "";
+        splitResult = ruleSplitString(result);
+        splitResult = splitResult.filter(function (element) {
+          return element.trim() !== "";
+        });
+        console.log("splitResult", splitResult);
+        info.value.push({
+          content: result,
+        });
+        setTimeout(() => {
+          scrollToBottom();
+        });
+        translateAudio(result);
+        delayedLoop(finalResult);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        let result =
+            "uni-app接入腾讯TRCT(一)—基础音视频 最近需要做一个类似于视频会议的项目，也是选用了腾讯云TRCT，原因：简单易用，打算和IM即时通信结合，可以做一个简易聊天加视频应用，这里是一个简单用法的。为防止网页自动播放音视频对用户造成干扰，浏览器对视频的自动播放做了限制：在没有用户交互之前，网页将被禁止播放带有声音的媒体。";
+        result = result.replace(/\s/g, "");
+
+        let splitResult = ruleSplitString(result);
+        splitResult = splitResult.filter(function (element) {
+          return element.trim() !== "";
+        });
+        console.log("splitResult", splitResult);
       });
-      console.log("splitResult", splitResult);
-      info.value.push({
-        content: result,
-      });
-      setTimeout(() => {
-        scrollToBottom();
-      });
-      translateAudio(result);
-      delayedLoop(finalResult);
-    })
-    .catch((err) => {
-      console.log(err);
-
-      let result =
-        "uni-app接入腾讯TRCT(一)—基础音视频 最近需要做一个类似于视频会议的项目，也是选用了腾讯云TRCT，原因：简单易用，打算和IM即时通信结合，可以做一个简易聊天加视频应用，这里是一个简单用法的。为防止网页自动播放音视频对用户造成干扰，浏览器对视频的自动播放做了限制：在没有用户交互之前，网页将被禁止播放带有声音的媒体。";
-      result = result.replace(/\s/g, "");
-
-      let splitResult = ruleSplitString(result);
-      splitResult = splitResult.filter(function (element) {
-        return element.trim() !== "";
-      });
-      console.log("splitResult", splitResult);
-    });
 }
+
 //字幕
 function countWords(str) {
   const chinese = Array.from(str).filter((ch) =>
-    /[\u4e00-\u9fa5]/.test(ch)
+      /[\u4e00-\u9fa5]/.test(ch)
   ).length;
 
   const english = Array.from(str)
-    .map((ch) => (/[a-zA-Z0-9\s]/.test(ch) ? ch : " "))
-    .join("")
-    .split(/\s+/)
-    .filter((s) => s).length;
+      .map((ch) => (/[a-zA-Z0-9\s]/.test(ch) ? ch : " "))
+      .join("")
+      .split(/\s+/)
+      .filter((s) => s).length;
 
   return chinese + english;
 }
@@ -387,15 +367,18 @@ function delayedLoop(finalResult) {
     console.log(isActive);
     const item = finalResult[index];
     const wordsNumber = countWords(item);
+    console.log(wordsNumber, '%%%%%%%%%%')
     var s;
     if (item.length > 45 && item.length < 50) {
-      s = (wordsNumber / 5) * 1050;
+      s = (wordsNumber / 5) * 1450;
     } else if (item.length > 50) {
-      s = (wordsNumber / 5) * 1200;
+      s = (wordsNumber / 5) * 1350;
     } else if (item.length < 30) {
-      s = (wordsNumber / 5) * 1200;
-    } else if (item.length > 30 && item.length < 45) {
-      s = (wordsNumber / 5) * 1300;
+      s = (wordsNumber / 5) * 1250;
+    } else if (item.length > 30 && item.length < 35) {
+      s = (wordsNumber / 5) * 1350;
+    } else if (item.length > 35 && item.length < 45) {
+      s = (wordsNumber / 5) * 1500;
     }
 
     // 添加类名
@@ -420,7 +403,7 @@ function delayedLoop(finalResult) {
 function checkScrolling(subtitle) {
   if (subtitle.length > 45 && subtitle.length < 50) {
     const wordNumber = countWords(subtitle);
-    const animateTime = (wordNumber / 5) * 1.05 + "s";
+    const animateTime = (wordNumber / 5) * 1.45 + "s";
     console.log(animateTime);
     document.body.style.setProperty("--animateTime", animateTime);
     console.log(isActive, "-------");
@@ -428,7 +411,7 @@ function checkScrolling(subtitle) {
     console.log(isActive, "++++++");
   } else if (subtitle.length > 50) {
     const wordNumber = countWords(subtitle);
-    const animateTime = (wordNumber / 5) * 1.2 + "s";
+    const animateTime = (wordNumber / 5) * 1.35 + "s";
     console.log(animateTime);
     document.body.style.setProperty("--animateTime", animateTime);
     console.log(isActive, "-------");
@@ -443,10 +426,9 @@ function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
   const lastMessage = container.lastElementChild;
   if (lastMessage) {
-    lastMessage.scrollIntoView({ behavior: "smooth" });
+    lastMessage.scrollIntoView({behavior: "smooth"});
   }
 }
-
 
 
 //xuniren
@@ -460,9 +442,9 @@ function scrollToBottom() {
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">
             <li
-              v-for="(item, index) in info"
-              :key="index"
-              :class="[index % 2 === 0 ? 'right' : 'left']"
+                v-for="(item, index) in info"
+                :key="index"
+                :class="[index % 2 === 0 ? 'right' : 'left']"
             >
               <span :class="[index % 2 === 0 ? '' : 'overNone']" :title="item.content">{{ item.content }}</span>
             </li>
@@ -481,47 +463,47 @@ function scrollToBottom() {
         <!-- 两个按钮 -->
         <div class="chatBut" @click="chatBoxIsShow = !chatBoxIsShow">
           <svg
-            t="1698560429724"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="10229"
-            width="20"
-            height="20"
+              t="1698560429724"
+              class="icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="10229"
+              width="20"
+              height="20"
           >
             <path
-              d="M683.7 922.7h-345c-73.5 0-133.3-59.8-133.3-133.3V459.8c0-73.5 59.8-133.3 133.3-133.3h345c73.5 0 133.3 59.8 133.3 133.3v329.6c0 73.5-59.8 133.3-133.3 133.3z m-345-506.9c-24.3 0-44.1 19.8-44.1 44.1v329.6c0 24.3 19.8 44.1 44.1 44.1h345c24.3 0 44.1-19.8 44.1-44.1V459.8c0-24.3-19.8-44.1-44.1-44.1h-345zM914.3 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-20 44.6-44.6 44.6zM111.7 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-19.9 44.6-44.6 44.6z"
-              fill="#ffffff"
-              p-id="10230"
+                d="M683.7 922.7h-345c-73.5 0-133.3-59.8-133.3-133.3V459.8c0-73.5 59.8-133.3 133.3-133.3h345c73.5 0 133.3 59.8 133.3 133.3v329.6c0 73.5-59.8 133.3-133.3 133.3z m-345-506.9c-24.3 0-44.1 19.8-44.1 44.1v329.6c0 24.3 19.8 44.1 44.1 44.1h345c24.3 0 44.1-19.8 44.1-44.1V459.8c0-24.3-19.8-44.1-44.1-44.1h-345zM914.3 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-20 44.6-44.6 44.6zM111.7 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-19.9 44.6-44.6 44.6z"
+                fill="#ffffff"
+                p-id="10230"
             ></path>
             <path
-              d="M511.2 415.8c-24.6 0-44.6-20-44.6-44.6V239.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6v131.9c0 24.6-20 44.6-44.6 44.6z"
-              fill="#ffffff"
-              p-id="10231"
+                d="M511.2 415.8c-24.6 0-44.6-20-44.6-44.6V239.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6v131.9c0 24.6-20 44.6-44.6 44.6z"
+                fill="#ffffff"
+                p-id="10231"
             ></path>
             <path
-              d="M511.2 276.6c-49.2 0-89.2-40-89.2-89.2s40-89.2 89.2-89.2 89.2 40 89.2 89.2-40 89.2-89.2 89.2z m0-89.2h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0z m0 0h0.2-0.2z m0 0h0.2-0.2z m0-0.1h0.2-0.2zM399 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9s50.9 22.8 50.9 50.9c0 28.1-22.8 50.9-50.9 50.9zM622.9 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9 28.1 0 50.9 22.8 50.9 50.9 0 28.1-22.8 50.9-50.9 50.9z"
-              fill="#ffffff"
-              p-id="10232"
+                d="M511.2 276.6c-49.2 0-89.2-40-89.2-89.2s40-89.2 89.2-89.2 89.2 40 89.2 89.2-40 89.2-89.2 89.2z m0-89.2h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0z m0 0h0.2-0.2z m0 0h0.2-0.2z m0-0.1h0.2-0.2zM399 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9s50.9 22.8 50.9 50.9c0 28.1-22.8 50.9-50.9 50.9zM622.9 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9 28.1 0 50.9 22.8 50.9 50.9 0 28.1-22.8 50.9-50.9 50.9z"
+                fill="#ffffff"
+                p-id="10232"
             ></path>
           </svg>
         </div>
         <div class="newsBut" @click="newsBoxIsShow = !newsBoxIsShow">
           <svg
-            t="1698559285380"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="5066"
-            width="20"
-            height="20"
+              t="1698559285380"
+              class="icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="5066"
+              width="20"
+              height="20"
           >
             <path
-              d="M896 192v704H256.8c-71.2 0-128.8-57.6-128.8-128.8V256.8C128 185.6 185.6 128 256.8 128H768v512H257.6c-36 0-65.6 29.6-65.6 65.6v60.8c0 36 29.6 65.6 65.6 65.6H832V192h64zM768 704H256v64h512v-64z"
-              p-id="5067"
-              fill="#ffffff"
+                d="M896 192v704H256.8c-71.2 0-128.8-57.6-128.8-128.8V256.8C128 185.6 185.6 128 256.8 128H768v512H257.6c-36 0-65.6 29.6-65.6 65.6v60.8c0 36 29.6 65.6 65.6 65.6H832V192h64zM768 704H256v64h512v-64z"
+                p-id="5067"
+                fill="#ffffff"
             ></path>
           </svg>
         </div>
@@ -529,78 +511,79 @@ function scrollToBottom() {
         <!-- 字幕 -->
         <div class="subtitle-container">
           <div
-            class="subtitle"
-            :class="{ zimu: isActive }"
-            id="scrollZiMu"
-            :key="index"
+              class="subtitle"
+              :class="{ zimu: isActive }"
+              id="scrollZiMu"
+              :key="index"
           >
             {{ subtitleRef }}
           </div>
         </div>
         <!-- 输入的内容，左上角显示 -->
         <li
-          ref="chatBox"
-          v-for="(item, index) in info"
-          :key="index"
-          :class="[index % 2 === 0 ? 'right' : 'left']"
-          v-show="index === info.length - 2"
+            ref="chatBox"
+            v-for="(item, index) in info"
+            :key="index"
+            :class="[index % 2 === 0 ? 'right' : 'left']"
+            v-show="index === info.length - 2"
         >
           <span>{{ item.content }}</span>
         </li>
 
         <!-- 发送框 -->
         <div class="sendBox">
+          <el-button type="primary" @click="setMouthOpenY(1)">张嘴</el-button>
+          <el-button type="primary" @click="setMouthOpenY(0)">闭嘴</el-button>
+          <el-button type="primary" @click="translateAudio('uni-app接入腾讯TRCT(一)—基础音视频 最近需要做一个类似于视频会议的项目，')">说话</el-button>
           <el-input
-            v-model="msg"
-            placeholder="Please input"
-            class="input-with-select"
-            id="result"
-            @keyup.enter="sendmsg"
+              v-model="msg"
+              placeholder="Please input"
+              class="input-with-select"
+              id="result"
+              @keyup.enter="sendmsg"
           >
             <!-- :suffix-icon="Microphone" -->
             <template #append>
               <el-button style="padding-right: 40px" id="btn_control">
                 <svg
-                  t="1695268139557"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="1815"
-                  width="16"
-                  height="16"
+                    t="1695268139557"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="1815"
+                    width="16"
+                    height="16"
                 >
-                                   
                   <path
-                    d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z"
-                    fill="#6D7793"
-                    p-id="1816"
+                      d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z"
+                      fill="#6D7793"
+                      p-id="1816"
                   ></path>
                 </svg>
               </el-button>
 
               <el-button
-                @click="sendmsg"
-                type="primary"
-                style="padding-right: 10px"
+                  @click="sendmsg"
+                  type="primary"
+                  style="padding-right: 10px"
               >
                 <svg
-                  t="1695268383161"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="2870"
-                  width="16"
-                  height="16"
+                    t="1695268383161"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="2870"
+                    width="16"
+                    height="16"
                 >
                   <path
-                    d="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
-                    p-id="2871"
+                      d="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
+                      p-id="2871"
                   ></path>
                 </svg>
               </el-button>
-              <!-- <el-button  type="primary">发送</el-button> -->
             </template>
           </el-input>
         </div>
@@ -614,29 +597,29 @@ function scrollToBottom() {
 
           <el-dialog v-model="dialogTableVisible" title="abstract">
             <el-table
-              row-key="id"
-              :data="arrWithoutNews"
-              style="width: 100%"
-              max-height="300"
+                row-key="id"
+                :data="arrWithoutNews"
+                style="width: 100%"
+                max-height="300"
             >
-              <el-table-column type="index" label=" " width="50" />
-              <el-table-column prop="title" label="title" width="250" />
-              <el-table-column prop="author" label="author" width="150" />
-              <el-table-column prop="time" label="time" />
-              <el-table-column prop="if" label="IF" />
+              <el-table-column type="index" label=" " width="50"/>
+              <el-table-column prop="title" label="title" width="250"/>
+              <el-table-column prop="author" label="author" width="150"/>
+              <el-table-column prop="time" label="time"/>
+              <el-table-column prop="if" label="IF"/>
               <!-- <el-table-column prop="abstract" label="abstract" /> -->
               <el-table-column
-                fixed="right"
-                prop="abstract"
-                label="abstract"
-                width="100"
+                  fixed="right"
+                  prop="abstract"
+                  label="abstract"
+                  width="100"
               >
                 <template #default="scope">
                   <el-button
-                    link
-                    type="primary"
-                    size="small"
-                    @click="showDrawer(scope.$index)"
+                      link
+                      type="primary"
+                      size="small"
+                      @click="showDrawer(scope.$index)"
                   >
                     Detail
                   </el-button>
@@ -658,7 +641,7 @@ function scrollToBottom() {
 
           <el-dialog v-model="drawer2" title="news">
             <div v-for="(item, index) in arrWithNews"
-              :key="index">
+                 :key="index">
               <div style="font-weight: bold">{{ item.title }}</div>
               <div>{{ item.news }}</div>
             </div>
@@ -728,19 +711,20 @@ li + li {
 
   .box {
     display: flex;
-    justify-content: space-between;
-
+    justify-content: center;
+    width: 90%;
     height: 90%;
     // border: 1px solid #000;
     margin: 10px;
 
     .sendBox {
       height: 10%;
-      width: 50%;
-      margin: 10px;
+      width: 100%;
+      margin-top: 10px;
       border-radius: 10px;
       --el-border-radius-base: 10px !important;
     }
+
     .chatFrame {
       margin: 10px;
       height: 100%;
@@ -759,11 +743,11 @@ li + li {
         // overflow: auto;
 
         // overflow-x: hidden;
-        .overNone{
-  width:120px;
-          white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
+        .overNone {
+          width: 120px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -771,7 +755,7 @@ text-overflow:ellipsis;
     .right-box {
       position: relative;
       margin: 10px;
-      // width: 50%;
+      // width:550px;
       height: 90%;
       // border: 1px solid #000; //不需要
       // background: #ffffff;
@@ -794,6 +778,7 @@ text-overflow:ellipsis;
         bottom: 45%;
         left: 10px;
       }
+
       .newsBut {
         width: 50px;
         height: 50px;
@@ -809,6 +794,7 @@ text-overflow:ellipsis;
         bottom: 45%;
         right: 10px;
       }
+
       .robot {
         overflow: hidden;
         width: 100%;
@@ -828,6 +814,7 @@ text-overflow:ellipsis;
           background-color: white;
           box-shadow: 1px 50px 99px 1px #9fb3f540;
           border-radius: 20px;
+
           .canvas {
             width: 80%;
             height: 80%;
@@ -896,6 +883,7 @@ text-overflow:ellipsis;
         }
       }
     }
+
     .newsBox {
       margin: 10px;
       height: 100%;
