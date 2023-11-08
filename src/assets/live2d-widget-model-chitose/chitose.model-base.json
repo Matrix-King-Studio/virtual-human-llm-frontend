@@ -1,0 +1,13 @@
+{
+  "version": "Sample 1.0.0",
+  "model": "moc/chitose.moc",
+  "textures": [
+    "moc/chitose.2048/texture_00.png"
+  ],
+  "motions": {
+
+  },
+  "expressions": [
+
+  ]
+}
