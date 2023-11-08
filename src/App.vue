@@ -5,7 +5,8 @@ import {ref, onMounted} from "vue";
 import axios from "axios";
 
 const cubism2Model =
-    "https://cdn.jsdelivr.net/gh/Matrix-King-Studio/virtual-human-llm-frontend@master/src/assets/live2d-widget-model-chitose/chitose.model-base.json";
+    "./src/assets/live2d-widget-model-chitose/chitose.model.json";
+    // "https://cdn.jsdelivr.net/gh/Matrix-King-Studio/virtual-human-llm-frontend@master/src/assets/live2d-widget-model-chitose/chitose.model.json";
 const cubism4Model =
     "https://cdn.jsdelivr.net/gh/nladuo/live2d-chatbot-demo@main/dist/assets/haru/haru_greeter_t03.model3.json";
 
@@ -29,7 +30,7 @@ onMounted(() => {
     model2.x = -200;
     model2.y = -100;
     app.stage.addChild(model2);
-    model2.scale.set(0.4);
+    model2.scale.set(0.55);
   };
   virtualHuman();
 });
