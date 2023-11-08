@@ -5,8 +5,8 @@ import {ref, onMounted} from "vue";
 import axios from "axios";
 
 const cubism2Model =
-    // "./src/assets/live2d-widget-model-chitose/chitose.model.json";
-    "https://cdn.jsdelivr.net/gh/Matrix-King-Studio/virtual-human-llm-frontend@master/src/assets/live2d-widget-model-chitose/chitose.model.base.json";
+    "./src/assets/haru/haru_greeter_t03.model3.json";
+    // "https://cdn.jsdelivr.net/gh/Matrix-King-Studio/virtual-human-llm-frontend@master/src/assets/live2d-widget-model-chitose/chitose.model.base.json";
 const cubism4Model =
     "https://cdn.jsdelivr.net/gh/nladuo/live2d-chatbot-demo@main/dist/assets/haru/haru_greeter_t03.model3.json";
 
@@ -30,7 +30,7 @@ onMounted(() => {
     model2.x = -200;
     model2.y = -100;
     app.stage.addChild(model2);
-    model2.scale.set(0.55);
+    model2.scale.set(0.5);
   };
   virtualHuman();
 });
@@ -66,6 +66,7 @@ document.body.appendChild(scriptElement3);
 
 //文字转语音
 function translateTextListAudio(textList) {
+  okToSend.value=false;
   if (!textList || textList.length === 0) return;
 
   const APPID = "c2f4af4c";
@@ -95,7 +96,12 @@ function translateTextListAudio(textList) {
     subtitleRef.value = "";
     // 移除已经处理过的文本，并递归处理剩余的文本
     textList.shift();
+    if(textList.length===0){
+     okToSend.value=true;
+   }else{
     translateTextListAudio(textList);
+   }
+   
   };
 
   function getWebSocketUrl(apiKey, apiSecret) {
@@ -158,11 +164,10 @@ function translateTextListAudio(textList) {
         business: {
           aue: "raw",
           auf: "audio/L16;rate=16000",
-          vcn: "xiaoyan",
+          vcn: "aisjiuxu",
           speed: 50,
           volume: 50,
           pitch: 50,
-          bgs: 1,
           tte,
         },
         data: {
@@ -301,11 +306,11 @@ function chatWithAi({content}) {
 
   subtitleRef.value = textwaitting;
   axios({
-    method: "get",
+    method: "post",
     headers: {
       "Content-Type": "application/json",
     },
-    url: "/test.json",
+    url: "/search_web",
     data: messages,
   })
       .then((response) => {
@@ -322,9 +327,9 @@ function chatWithAi({content}) {
         finalSource = source;
 
 
-        if (status !== 200) {
-          ElMessage({message: result, type: "error"});
-        }
+        // if (status != 200) {
+        //   ElMessage({message: result, type: "error"});
+        // }
 
         splitResult = ruleSplitString(result);
         splitResult = splitResult.filter(function (element) {
@@ -363,34 +368,8 @@ const subtitleRef = ref("");
 
 //延时函数
 let index = 0;
-let isActive = ref(false);
 
-function delayedLoop(splitResult) {
-  if (index < splitResult.length) {
-    okToSend.value = false;
-    const item = splitResult[index];
-    const wordsNumber = countWords(item);
-    var s
-    if (wordsNumber < 10) {
-      s = wordsNumber * 400
-    } else {
-      s = wordsNumber / 4 * 1130
-    }
-    translateAudio(item);
-    // 添加类名
-    // subtitleRef.value = item;
-    // setTimeout(() => {
-    //   console.log(item);
-    //   index++;
-    //   delayedLoop(splitResult);
-    // }, s);
-  } else {
-    okToSend.value = true;
-    subtitleRef.value = "";
-    index = 0;
-    splitResult.length = 0;
-  }
-}
+
 
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
@@ -717,7 +696,7 @@ li + li {
 
         // overflow-x: hidden;
         .overNone {
-          width: 120px;
+          max-width: 120px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -817,7 +796,7 @@ li + li {
         height: 50px;
 
         overflow: hidden;
-        background-color: rgba(255, 174, 174, 0.16);
+        
         border-radius: 20px;
         // border: 3px solid #d47171; //不需要
       }
