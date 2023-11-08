@@ -18,7 +18,7 @@ export default defineConfig({
                 rewrite: path => path.replace(/^\/baidubce/, '')
             },
             '/search_web': {
-                target: 'http://36.103.234.108:10088/',
+                target: 'http://36.103.177.230:10088/',
                 changeOrigin: true
             },
             '/individuation': {

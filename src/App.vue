@@ -4,10 +4,12 @@ import {ElMessage} from "element-plus";
 import {ref, onMounted} from "vue";
 import axios from "axios";
 
+const cubism2Model =
+    "https://cdn.jsdelivr.net/gh/raoenhui/live2d-example@master/packages/live2d-widget-model-chitose/assets/chitose.model.json";
 const cubism4Model =
     "https://cdn.jsdelivr.net/gh/nladuo/live2d-chatbot-demo@main/dist/assets/haru/haru_greeter_t03.model3.json";
-// const cubism4Model = "./src/assets/json/haru_greeter_t03.model3.json"
 
+let model2;
 let model4;
 onMounted(() => {
   const virtualHuman = async () => {
@@ -17,17 +19,24 @@ onMounted(() => {
       backgroundColor: 0xffffff,
     });
 
-    model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
-    model4.x = -200;
-    model4.y = -100;
-    app.stage.addChild(model4);
-    model4.scale.set(0.5);
+    // model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
+    // model4.x = -200;
+    // model4.y = -100;
+    // app.stage.addChild(model4);
+    // model4.scale.set(0.5);
+
+    model2 = await PIXI.live2d.Live2DModel.from(cubism2Model);
+    model2.x = -200;
+    model2.y = -100;
+    app.stage.addChild(model2);
+    model2.scale.set(0.6);
   };
   virtualHuman();
 });
 const setMouthOpenY = (v) => {
   v = Math.max(0, Math.min(1, v));
-  model4.internalModel.coreModel.setParameterValueById("ParamMouthOpenY", v);
+  model2.internalModel.coreModel.setParamFloat("PARAM_MOUTH_OPEN_Y", v);
+  // model4.internalModel.coreModel.setParameterValueById("ParamMouthOpenY", v);
 };
 
 let res_id;
@@ -55,7 +64,9 @@ document.body.appendChild(scriptElement2);
 document.body.appendChild(scriptElement3);
 
 //文字转语音
-function translateAudio(text) {
+function translateTextListAudio(textList) {
+  if (!textList || textList.length === 0) return;
+
   const APPID = "c2f4af4c";
   const API_SECRET = "NWE4MDlkNGYxMjAxOWIwNzE4MDRkOWYy";
   const API_KEY = "a50e10629e5399e23dd63410dc0e315f";
@@ -63,19 +74,27 @@ function translateAudio(text) {
   const audioPlayer = new AudioPlayer("../public/dist");
   let intervalOpen;
   let intervalClose;
+
   audioPlayer.onPlay = () => {
-    intervalOpen=setInterval(function(){
-      setMouthOpenY(1)
-    },200);
-    intervalClose=setInterval(function(){
-      setMouthOpenY(0)
-    },250);
+    intervalOpen = setInterval(() => {
+      let randomOpenValue = 0.3 + (0.7 - 0.3) * Math.random();
+      setMouthOpenY(randomOpenValue);
+    }, 200);
+    intervalClose = setInterval(() => {
+      let randomCloseValue = 0.2 + (0.5 - 0.2) * Math.random();
+      setMouthOpenY(randomCloseValue)
+    }, 250);
+    subtitleRef.value = textList[0];
   };
+
   audioPlayer.onStop = (audioDatas) => {
-    clearInterval(intervalOpen)
-    clearInterval(intervalClose)
-    setMouthOpenY(0)
-    console.log(audioDatas);
+    clearInterval(intervalOpen);
+    clearInterval(intervalClose);
+    setMouthOpenY(0);
+    subtitleRef.value = "";
+    // 移除已经处理过的文本，并递归处理剩余的文本
+    textList.shift();
+    translateTextListAudio(textList);
   };
 
   function getWebSocketUrl(apiKey, apiSecret) {
@@ -114,7 +133,7 @@ function translateAudio(text) {
 
   let ttsWS;
 
-  function connectWebSocket() {
+  function connectWebSocket(text) {
     const url = getWebSocketUrl(API_KEY, API_SECRET);
     if ("WebSocket" in window) {
       ttsWS = new WebSocket(url);
@@ -132,14 +151,9 @@ function translateAudio(text) {
         resumePlayDuration: 1000,
       });
 
-      // var text =
-      //   document.getElementById("textarea").value.trim() ||
-      //   "请输入您要合成的文本";
       var tte = "UTF8";
       var params = {
-        common: {
-          app_id: APPID,
-        },
+        common: {app_id: APPID},
         business: {
           aue: "raw",
           auf: "audio/L16;rate=16000",
@@ -183,7 +197,8 @@ function translateAudio(text) {
     };
   }
 
-  connectWebSocket();
+  // 开始处理文本列表的第一个文本
+  connectWebSocket(textList[0]);
 }
 
 const msg = ref(""); //输入内容
@@ -225,7 +240,7 @@ function sendmsg() {
 
 const info = ref([]);
 
-let finalResult;
+
 let finalSource;
 
 function ruleSplitString(string, length = 25) {
@@ -269,7 +284,7 @@ function ruleSplitString(string, length = 25) {
 
 let splitResult;
 let arrWithNews;
-let arrWithoutNews
+let arrWithoutNews;
 
 function chatWithAi({content}) {
   const messages = {
@@ -296,16 +311,17 @@ function chatWithAi({content}) {
         console.log(response, "=========");
         const {data} = response;
         const {status, result, source, history} = data;
-        arrWithNews = source.filter(obj => obj.hasOwnProperty('news') && obj.news);
-        arrWithoutNews = source.filter(obj => !obj.hasOwnProperty('news') || !obj.news);
+        arrWithNews = source.filter(
+            (obj) => obj.hasOwnProperty("news") && obj.news
+        );
+        arrWithoutNews = source.filter(
+            (obj) => !obj.hasOwnProperty("news") || !obj.news
+        );
 
-        finalSource = source
-        console.log(finalSource[4].news, "789456");
-        finalResult = result
-            .split(/([。.])/)
-            .filter((element) => element !== "。" && element !== ".");
+        finalSource = source;
 
-        if (status != 200) {
+
+        if (status !== 200) {
           ElMessage({message: result, type: "error"});
         }
 
@@ -320,23 +336,12 @@ function chatWithAi({content}) {
         setTimeout(() => {
           scrollToBottom();
         });
-        translateAudio(result);
-        delayedLoop(finalResult);
+
+        // delayedLoop(splitResult);
+        translateTextListAudio(splitResult);
       })
-      .catch((err) => {
-        console.log(err);
-
-        let result =
-            "uni-app接入腾讯TRCT(一)—基础音视频 最近需要做一个类似于视频会议的项目，也是选用了腾讯云TRCT，原因：简单易用，打算和IM即时通信结合，可以做一个简易聊天加视频应用，这里是一个简单用法的。为防止网页自动播放音视频对用户造成干扰，浏览器对视频的自动播放做了限制：在没有用户交互之前，网页将被禁止播放带有声音的媒体。";
-        result = result.replace(/\s/g, "");
-
-        let splitResult = ruleSplitString(result);
-        splitResult = splitResult.filter(function (element) {
-          return element.trim() !== "";
-        });
-        console.log("splitResult", splitResult);
-      });
 }
+
 
 //字幕
 function countWords(str) {
@@ -354,82 +359,46 @@ function countWords(str) {
 }
 
 const subtitleRef = ref("");
-let timeId;
+
 //延时函数
 let index = 0;
 let isActive = ref(false);
 
-function delayedLoop(finalResult) {
-  var element = document.getElementById("scrollZiMu");
-  element.classList.remove("zimu");
-  if (index < finalResult.length) {
+function delayedLoop(splitResult) {
+  if (index < splitResult.length) {
     okToSend.value = false;
-    console.log(isActive);
-    const item = finalResult[index];
+    const item = splitResult[index];
     const wordsNumber = countWords(item);
-    console.log(wordsNumber, '%%%%%%%%%%')
-    var s;
-    if (item.length > 45 && item.length < 50) {
-      s = (wordsNumber / 5) * 1450;
-    } else if (item.length > 50) {
-      s = (wordsNumber / 5) * 1350;
-    } else if (item.length < 30) {
-      s = (wordsNumber / 5) * 1250;
-    } else if (item.length > 30 && item.length < 35) {
-      s = (wordsNumber / 5) * 1350;
-    } else if (item.length > 35 && item.length < 45) {
-      s = (wordsNumber / 5) * 1500;
+    var s
+    if (wordsNumber < 10) {
+      s = wordsNumber * 400
+    } else {
+      s = wordsNumber / 4 * 1130
     }
-
+    translateAudio(item);
     // 添加类名
-    subtitleRef.value = item;
-    checkScrolling(item);
-
-    timeId = setTimeout(() => {
-      console.log(item);
-      index++;
-
-      delayedLoop(finalResult);
-    }, s);
+    // subtitleRef.value = item;
+    // setTimeout(() => {
+    //   console.log(item);
+    //   index++;
+    //   delayedLoop(splitResult);
+    // }, s);
   } else {
     okToSend.value = true;
-
     subtitleRef.value = "";
     index = 0;
-    finalResult.length = 0;
-  }
-}
-
-function checkScrolling(subtitle) {
-  if (subtitle.length > 45 && subtitle.length < 50) {
-    const wordNumber = countWords(subtitle);
-    const animateTime = (wordNumber / 5) * 1.45 + "s";
-    console.log(animateTime);
-    document.body.style.setProperty("--animateTime", animateTime);
-    console.log(isActive, "-------");
-    isActive = true;
-    console.log(isActive, "++++++");
-  } else if (subtitle.length > 50) {
-    const wordNumber = countWords(subtitle);
-    const animateTime = (wordNumber / 5) * 1.35 + "s";
-    console.log(animateTime);
-    document.body.style.setProperty("--animateTime", animateTime);
-    console.log(isActive, "-------");
-    isActive = true;
-    console.log(isActive, "++++++");
-  } else {
-    isActive = false;
+    splitResult.length = 0;
   }
 }
 
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
+  console.log(container, '************')
   const lastMessage = container.lastElementChild;
   if (lastMessage) {
     lastMessage.scrollIntoView({behavior: "smooth"});
   }
 }
-
 
 //xuniren
 </script>
@@ -446,7 +415,11 @@ function scrollToBottom() {
                 :key="index"
                 :class="[index % 2 === 0 ? 'right' : 'left']"
             >
-              <span :class="[index % 2 === 0 ? '' : 'overNone']" :title="item.content">{{ item.content }}</span>
+              <span
+                  :class="[index % 2 === 0 ? '' : 'overNone']"
+                  :title="item.content"
+              >{{ item.content }}</span
+              >
             </li>
           </ul>
         </el-scrollbar>
@@ -512,8 +485,6 @@ function scrollToBottom() {
         <div class="subtitle-container">
           <div
               class="subtitle"
-              :class="{ zimu: isActive }"
-              id="scrollZiMu"
               :key="index"
           >
             {{ subtitleRef }}
@@ -524,7 +495,7 @@ function scrollToBottom() {
             ref="chatBox"
             v-for="(item, index) in info"
             :key="index"
-            :class="[index % 2 === 0 ? 'right' : 'left']"
+            :class="[index % 2 === 0 ? 'right' : 'vanish']"
             v-show="index === info.length - 2"
         >
           <span>{{ item.content }}</span>
@@ -532,9 +503,7 @@ function scrollToBottom() {
 
         <!-- 发送框 -->
         <div class="sendBox">
-          <el-button type="primary" @click="setMouthOpenY(1)">张嘴</el-button>
-          <el-button type="primary" @click="setMouthOpenY(0)">闭嘴</el-button>
-          <el-button type="primary" @click="translateAudio('uni-app接入腾讯TRCT(一)—基础音视频 最近需要做一个类似于视频会议的项目，')">说话</el-button>
+
           <el-input
               v-model="msg"
               placeholder="Please input"
@@ -640,8 +609,7 @@ function scrollToBottom() {
           </el-button>
 
           <el-dialog v-model="drawer2" title="news">
-            <div v-for="(item, index) in arrWithNews"
-                 :key="index">
+            <div v-for="(item, index) in arrWithNews" :key="index">
               <div style="font-weight: bold">{{ item.title }}</div>
               <div>{{ item.news }}</div>
             </div>
@@ -663,6 +631,10 @@ ul {
 
 li.left {
   margin-right: 20px;
+}
+
+li.vanish {
+  display: none;
 }
 
 li.left span {
