@@ -18,17 +18,13 @@ export default defineConfig({
                 rewrite: path => path.replace(/^\/baidubce/, '')
             },
             '/search_web': {
-                target: 'http://36.103.177.230:10088/',
+                target: 'http://120.220.95.176:19114/',
                 changeOrigin: true
             },
             '/individuation': {
                 target: 'http://evo-hu.xf-yun.com',
-               
-            },
-            '/test.json':{
-                target:'http://127.0.0.1:5050/',
                 changeOrigin: true
-            }
+            },
             // '/':{
             //   target:''
             // }
