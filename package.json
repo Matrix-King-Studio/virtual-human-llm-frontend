@@ -22,6 +22,7 @@
     "js-base64": "^3.7.5",
     "pinia": "^2.1.7",
     "typed.js": "^2.0.16",
+    "unplugin-auto-import": "^0.16.7",
     "vue": "^3.3.4",
     "vue-head": "^2.2.0",
     "vue-router": "^4.2.5"
