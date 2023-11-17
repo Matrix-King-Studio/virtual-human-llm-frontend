@@ -14,6 +14,10 @@ const routes = [
     path: '/register',
     component: () => import('../views/Register.vue'),  // 路由的组件
   },
+  {
+    path: '/test',
+    component: () => import('../views/Test.vue'),  // 路由的组件
+  },
 ];
 
 const router = createRouter({
