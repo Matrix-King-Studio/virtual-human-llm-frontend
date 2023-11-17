@@ -9,6 +9,11 @@ export default defineConfig({
     ],
     server: {
         proxy: {
+            '/trans': {
+                target: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+                changeOrigin: true,
+                rewrite: path => path.replace(/^\/trans/, '')
+            },
             // 使用正则表达式
             '/vmss': {
                 target: 'http://vms.cn-huadong-1.xf-yun.com',
