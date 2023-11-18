@@ -12,6 +12,8 @@ import {ElMessage} from "element-plus";
 import {ref, onMounted} from "vue";
 import axios from "axios";
 
+const language = ref("");
+
 let res_id;
 
 //new
@@ -372,6 +374,10 @@ function scrollToBottom() {
     <el-image
         style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill"
         src="../src/assets/logo.png"/>
+    <el-select v-model="language" placeholder="一键翻译" style="width: 100px; height: 50px; position: absolute; right: 10px; top: 10px">
+      <el-option label="中文" value="chinese" />
+      <el-option label="英文" value="english" />
+    </el-select>
     <div class="box">
       <div class="chatFrame" v-show="chatBoxIsShow">
         <!-- 滚动框 -->
