@@ -6,6 +6,7 @@ import axios from "axios";
 import { removeToken } from "../composables/auth";
 import router from '../router'
 import { totast } from "../composables/util";
+import md5 from 'js-md5'
 
 // 退出登录操作
 function logout() {
@@ -54,6 +55,9 @@ const setMouthOpenY = (v) => {
   // model4.internalModel.coreModel.setParameterValueById("ParamMouthOpenY", v);
 };
 
+const result=ref("")
+const lang=ref('')
+
 let res_id;
 
 
@@ -78,6 +82,50 @@ function showDrawer1(index) {
   selectedRowIndex = index;
   drawer2.value = true;
   console.log(12345);
+}
+
+const translate=()=>{
+  const query1=ref('')
+  if(lang.value=='en'){
+    query1.value=info.value.map(element => (element.content?element.content:element)).join('[]')
+  }else if(lang.value=='zh'){
+    info.value=info1.value
+    query1.value=info.value.map(element => (element.content?element.content:element)).join('[]')
+  }
+  var appid = '20231117001883604'
+  var key = 'lAxlO8o4mTT0LkQXNW_V'
+  var salt = (new Date).getTime()
+  var query = query1.value
+  var from = 'auto'
+  var to = lang.value
+  var str1 = appid + query + salt + key
+  var sign = md5(str1)
+  axios.get('/trans',{params:{
+    q: query,
+    appid: appid,
+    salt: salt,
+    from: from,
+    to: to,
+    sign: sign
+  }}).then((res)=>{
+    result.value=res.data.trans_result[0].dst
+    console.log(res.data.trans_result[0].dst,'翻译成功咯')
+
+    info.value =  res.data.trans_result[0].dst.split('[]')
+    console.log(info.value)
+  })
+}
+
+const change=(e)=>{
+console.log(e,'kkkkkk')
+if(e=='chinese'){
+  lang.value='zh'
+}else if(e=='english'){
+  lang.value='en'
+}else{
+  lang.value=''
+}
+translate()
 }
 
 const scriptElement1 = document.createElement("script");
@@ -263,7 +311,7 @@ function sendmsg() {
   info.value.push({
     content,
   });
-
+  info1.value = info.value
   setTimeout(() => {
     scrollToBottom();
   });
@@ -271,7 +319,7 @@ function sendmsg() {
 }
 
 const info = ref([]);
-
+const info1 = ref([]);
 
 let finalSource;
 
@@ -414,7 +462,7 @@ const language = ref("中文");
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
     <el-select v-model="language" placeholder="一键翻译"
-      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px">
+      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
       <el-option label="中文" value="chinese" />
       <el-option label="英文" value="english" />
     </el-select>
@@ -425,7 +473,10 @@ const language = ref("中文");
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
-              <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
+              <span :class="[index % 2 === 0 ? '' : '']" :title="item.content"  v-if="item.content">{{ item.content }}</span>
+              <span :title="item.content" v-else>
+                {{ item }}
+              </span>
             </li>
           </ul>
         </el-scrollbar>
@@ -475,7 +526,8 @@ const language = ref("中文");
         <!-- 输入的内容，左上角显示 -->
         <li ref="chatBox" v-for="(item, index) in info" :key="index" class="question"
           :class="[index % 2 === 0 ? 'right' : 'vanish']" v-show="index === info.length - 2">
-          <span>{{ item.content }}</span>
+          <span v-if="item.content">{{ item.content }}</span>
+          <span v-else>{{ item }}</span>
         </li>
 
         <!-- 发送框 -->
