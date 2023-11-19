@@ -28,7 +28,9 @@
         </el-form-item>
       </el-form>
       <div class="link-box">
+
         <span></span>
+
         <span><router-link to="/register">注册账号</router-link></span>
       </div>
     </div>
@@ -97,8 +99,8 @@ formRef.value.validate((valid)=>{
 </script>
 <style lang="less">
   .login-box {
-    width: 50%;
-    height: 90%;
+    width: 488px;
+    height: 482px;
     h2 {
       font-size: 30px;
       text-align: center;
@@ -111,6 +113,7 @@ formRef.value.validate((valid)=>{
       box-shadow: 1px 50px 99px 1px #9fb3f540;
       border-radius: 20px;
       .el-form {
+        height: 95%;
         padding: 0 5%;
         .el-form-item__content {
           span {
@@ -130,7 +133,7 @@ formRef.value.validate((valid)=>{
       }
       .link-box {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
       }
     }
   }
