@@ -42,7 +42,7 @@ import { ref, reactive } from 'vue';
 import { sign } from "../utils/api";
 // 引入二次封装的提示信息
 import { totast } from '../composables/util';
-import { useRouter } from 'vue-router';
+
 import router from '../router';
 
 // import { useCookies } from '@vueuse/integrations/useCookies'
