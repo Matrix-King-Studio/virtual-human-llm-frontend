@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     component: () => import('../views/Home.vue'),  // 路由的组件
   },
   {
-    path: '/',
+    path: '/login',
     component: () => import('../views/Login.vue'),  // 路由的组件
   },
   {

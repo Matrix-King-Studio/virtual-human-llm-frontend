@@ -12,7 +12,9 @@ import {ElMessage} from "element-plus";
 import {ref, onMounted} from "vue";
 import axios from "axios";
 
-const language = ref("");
+
+
+
 
 let res_id;
 

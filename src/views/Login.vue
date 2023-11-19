@@ -28,6 +28,9 @@
         </el-form-item>
       </el-form>
       <div class="link-box">
+
+        <span></span>
+
         <span><router-link to="/register">注册账号</router-link></span>
       </div>
     </div>
@@ -35,6 +38,16 @@
 </template>
 <script setup>
 import { ref, reactive } from 'vue';
+// 引入封装的登录接口
+import { sign } from "../utils/api";
+// 引入二次封装的提示信息
+import { totast } from '../composables/util';
+import { useRouter } from 'vue-router';
+import router from '../router';
+
+// import { useCookies } from '@vueuse/integrations/useCookies'
+import { setToken } from '../composables/auth'; 
+
 
 const LoginData = reactive({
 username: '',
@@ -55,7 +68,31 @@ const formRef = ref(null)
 
 const onSubmit = () => {
 formRef.value.validate((valid)=>{
-  console.log(valid);
+  // 这里使用的是判断表单是否填充完整
+  if(!valid){
+    totast("请将表单填充完整！","error")
+    return
+  }
+  // 如果完整的话，调用接口函数，传入的参数为LoginData这个表单中的username和password
+  sign(LoginData.username,LoginData.password)
+  // 成功的话执行下面的回调函数
+  .then(res =>{
+    console.log(res)
+    // 使用router的跳转到首页
+    totast("登陆成功！！欢迎！！","success")
+    // 将key值存储为cookie
+    
+    // cookie.set('admin-token',res.key)
+    setToken(res.key)
+
+    router.push("/")
+  })
+  // 失败的话执行下面的回调函数
+  .catch(err =>{
+    // console.log(err)
+    totast("用户名或密码错误！","error")
+  })
+
 })
 }
 
