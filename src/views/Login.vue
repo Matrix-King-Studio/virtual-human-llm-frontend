@@ -43,7 +43,8 @@ import { totast } from '../composables/util';
 import { useRouter } from 'vue-router';
 import router from '../router';
 
-import { useCookies } from '@vueuse/integrations/useCookies'
+// import { useCookies } from '@vueuse/integrations/useCookies'
+import { setToken } from '../composables/auth'; 
 
 
 const LoginData = reactive({
@@ -74,12 +75,13 @@ formRef.value.validate((valid)=>{
   sign(LoginData.username,LoginData.password)
   // 成功的话执行下面的回调函数
   .then(res =>{
-    console.log(res.data.key)
+    console.log(res)
     // 使用router的跳转到首页
     totast("登陆成功！！欢迎！！","success")
     // 将key值存储为cookie
-    const cookie = useCookies();
-    cookie.set('admin-token',res.data.key)
+    
+    // cookie.set('admin-token',res.key)
+    setToken(res.key)
 
     router.push("/")
   })

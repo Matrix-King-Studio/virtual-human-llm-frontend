@@ -72,7 +72,7 @@ const rules = {
     ],
     password: [
         { required: true, message: '登陆密码不能为空', trigger: 'blur' },
-        {  min: 8, message: '登陆密码必须6位或以上', trigger: 'blur' },
+        {  min: 6, message: '登陆密码必须6位或以上', trigger: 'blur' },
     ],
     passwordAgain: [
         { required: true, message: '请再次输入登陆密码', trigger: 'blur' },
@@ -117,8 +117,8 @@ const register = () => {
             totast("邮箱格式不正确！", "error")
             return;
         }
-
-        if(!password.value){
+        // 判断密码是在这个范围之内
+        if( password.length < 6){
             totast("登陆密码需要6位或以上", "error")
             return;
         }
