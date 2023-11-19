@@ -12,6 +12,9 @@ import {ElMessage} from "element-plus";
 import {ref, onMounted} from "vue";
 import axios from "axios";
 
+
+
+
 let res_id;
 
 //new

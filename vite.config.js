@@ -33,10 +33,12 @@ export default defineConfig({
                 target: 'http://evo-hu.xf-yun.com',
                 changeOrigin: true
             },
-            '/api':'http://testapi.xuexiluxian.cn'
-            // '/':{
-            //   target:''
-            // }
+            // 配置跨域问题
+            '/api': {
+                target: 'http://121.37.67.75:10033/',
+                changeOrigin: true,
+                rewrite: path => path.replace(/^\/api/, '')
+            }
         }
     }
 })

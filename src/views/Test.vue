@@ -21,7 +21,7 @@ const translate=(query)=>{
                     var to = 'zh'
                     var str1 = appid + query + salt + key
                     var sign = md5(str1)
-                 axios.get('/trans',{params:{
+                    axios.get('/trans',{params:{
                         q: query,
                             appid: appid,
                             salt: salt,
