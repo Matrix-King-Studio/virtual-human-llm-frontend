@@ -1,3 +1,186 @@
+
+<template>
+  <div class="main">
+    <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
+    <el-select v-model="language" placeholder="一键翻译"
+      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
+      <el-option label="中文" value="chinese" />
+      <el-option label="英文" value="english" />
+    </el-select>
+    <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
+    <div class="box">
+      <div class="chatFrame" v-if="chatBoxIsShow">
+        <!-- 滚动框 -->
+        <el-scrollbar class="chatContent" ref="scrollBox">
+          <ul ref="chatBox" id="scrollBox">
+            <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
+              <span :class="[index % 2 === 0 ? '' : '']" :title="item.content"  >{{ item.content }}</span>
+             
+            </li>
+          </ul>
+        </el-scrollbar>
+      </div>
+
+      <!-- 虚拟人 -->
+      <div class="right-box">
+        <div class="robot">
+          <!-- 这是你的虚拟人视频流的容器 -->
+          <div class="remote_stream" id="robot_stream">
+            <canvas id="canvas" class="canvas"></canvas>
+          </div>
+        </div>
+        <!-- 两个按钮 -->
+        <div class="chatBut" @click="chatBoxIsShow = !chatBoxIsShow">
+          <svg t="1698560429724" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            p-id="10229" width="20" height="20">
+            <path
+              d="M683.7 922.7h-345c-73.5 0-133.3-59.8-133.3-133.3V459.8c0-73.5 59.8-133.3 133.3-133.3h345c73.5 0 133.3 59.8 133.3 133.3v329.6c0 73.5-59.8 133.3-133.3 133.3z m-345-506.9c-24.3 0-44.1 19.8-44.1 44.1v329.6c0 24.3 19.8 44.1 44.1 44.1h345c24.3 0 44.1-19.8 44.1-44.1V459.8c0-24.3-19.8-44.1-44.1-44.1h-345zM914.3 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-20 44.6-44.6 44.6zM111.7 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-19.9 44.6-44.6 44.6z"
+              fill="#ffffff" p-id="10230"></path>
+            <path
+              d="M511.2 415.8c-24.6 0-44.6-20-44.6-44.6V239.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6v131.9c0 24.6-20 44.6-44.6 44.6z"
+              fill="#ffffff" p-id="10231"></path>
+            <path
+              d="M511.2 276.6c-49.2 0-89.2-40-89.2-89.2s40-89.2 89.2-89.2 89.2 40 89.2 89.2-40 89.2-89.2 89.2z m0-89.2h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0z m0 0h0.2-0.2z m0 0h0.2-0.2z m0-0.1h0.2-0.2zM399 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9s50.9 22.8 50.9 50.9c0 28.1-22.8 50.9-50.9 50.9zM622.9 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9 28.1 0 50.9 22.8 50.9 50.9 0 28.1-22.8 50.9-50.9 50.9z"
+              fill="#ffffff" p-id="10232"></path>
+          </svg>
+        </div>
+        <div class="newsBut" @click="newsBoxIsShow = !newsBoxIsShow">
+          <svg t="1698559285380" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            p-id="5066" width="20" height="20">
+            <path
+              d="M896 192v704H256.8c-71.2 0-128.8-57.6-128.8-128.8V256.8C128 185.6 185.6 128 256.8 128H768v512H257.6c-36 0-65.6 29.6-65.6 65.6v60.8c0 36 29.6 65.6 65.6 65.6H832V192h64zM768 704H256v64h512v-64z"
+              p-id="5067" fill="#ffffff"></path>
+          </svg>
+        </div>
+
+        <!-- 字幕 -->
+        <!-- <div class="subtitle-container">
+          <div
+              class="subtitle"
+              :key="index"
+          >
+            {{ subtitleRef }}
+          </div>
+        </div> -->
+        <!-- 输入的内容，左上角显示 -->
+        <li ref="chatBox" v-for="(item, index) in info" :key="index" class="question"
+          :class="[index % 2 === 0 ? 'right' : 'vanish']" v-show="index === info.length - 2">
+          <span >{{ item.content }}</span>
+
+        </li>
+
+        <!-- 发送框 -->
+        <div class="sendBox">
+
+          <el-input v-model="msg" placeholder="Please input" class="input-with-select" id="result" @keyup.enter="sendmsg">
+            <!-- :suffix-icon="Microphone" -->
+            <template #append>
+              <el-button style="padding-right: 40px" id="btn_control">
+                <svg t="1695268139557" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="1815" width="16" height="16">
+                  <path
+                    d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z"
+                    fill="#6D7793" p-id="1816"></path>
+                </svg>
+              </el-button>
+
+              <el-button @click="sendmsg" type="primary" style="padding-right: 10px">
+                <svg t="1695268383161" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                  xmlns="http://www.w3.org/2000/svg" p-id="2870" width="16" height="16">
+                  <path
+                    d="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
+                    p-id="2871"></path>
+                </svg>
+              </el-button>
+            </template>
+          </el-input>
+        </div>
+      </div>
+      <div class="newsBox" v-show="newsBoxIsShow">
+        <div class="abstract">
+          <!-- 参考文献 -->
+          <el-button class="butBox" text @click="dialogTableVisible1 = true">
+            参考文献
+          </el-button>
+          <el-drawer v-model="dialogTableVisible1" title="参考文献" size="35%">
+            <div>
+              <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
+                <el-table-column type="index" label=" " width="50" />
+                <el-table-column prop="title" label="标题" width="250" />
+                <el-table-column prop="author" label="作者" width="150" />
+                <el-table-column prop="time" label="时间" width="100" />
+                <el-table-column prop="if" label="影响因子" width="100" />
+                <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
+                  <template #default="scope">
+                    <el-button link type="primary" size="small" @click="showDrawer(scope.$index)">
+                      详情
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-drawer v-model="drawer1" append-to-body class="abstract_bgc">
+                <h3 class="abstract_title">
+                  {{ arrWithoutNews[selectedRowIndex].title }}
+                </h3>
+                <p v-if="selectedRowIndex !== null" class="abstract_content">
+                  {{ arrWithoutNews[selectedRowIndex].abstract }}
+                </p>
+              </el-drawer>
+            </div>
+          </el-drawer>
+        </div>
+        <div class="news">
+          <!-- 新闻 -->
+          <el-button class="butBox" text @click="dialogTableVisible2 = true">
+            新闻
+          </el-button>
+          <el-drawer v-model="dialogTableVisible2" title="新闻" size="35%">
+            <div>
+              <el-table row-key="id" :data="arrWithNews" style="width: 100%" stripe max-height="300">
+                <el-table-column type="index" label=" " width="50" />
+                <el-table-column prop="title" label="标题" width="350" />
+
+                <el-table-column prop="time" label="时间" width="200" />
+
+                <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
+                  <template #default="scope">
+                    <el-button link type="primary" size="small" @click="showDrawer1(scope.$index)">
+                      详情
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-drawer v-model="drawer2" append-to-body class="abstract_bgc">
+                <div class="news_link_title">
+                  <a :href="arrWithNews[selectedRowIndex].ref" target="_blank" class="news_link">
+                    {{ arrWithNews[selectedRowIndex].title }}
+
+                  </a>
+                </div>
+                <p v-if="selectedRowIndex !== null" class="abstract_content">
+                  {{ arrWithNews[selectedRowIndex].abstract }}
+                </p>
+              </el-drawer>
+            </div>
+          </el-drawer>
+
+
+          <!-- <el-dialog v-model="drawer2" title="相关新闻">
+            <div v-for="(item, index) in arrWithNews" :key="index">
+              <div>
+                
+                <el-link :href="item.ref" target="_blank" :underline="false" style="font-weight: bold" class="news_title">
+                  {{ item.title }}
+                </el-link>
+              </div>
+              <div class="news_content">{{ item.abstract }}</div>
+            </div>
+          </el-dialog> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 <script setup>
 import { Base64 } from "js-base64";
 import { ElMessage } from "element-plus";
@@ -10,7 +193,7 @@ import md5 from 'js-md5'
 
 // 退出登录操作
 function logout() {
-  console.log('123');
+
   removeToken();
   totast("退出成功", "success");
   router.push('/login')
@@ -75,49 +258,59 @@ let dialogTableVisible2 = ref(false);
 function showDrawer(index) {
   selectedRowIndex = index;
   drawer1.value = true;
-  console.log(12345);
+
 }
 
 function showDrawer1(index) {
   selectedRowIndex = index;
   drawer2.value = true;
-  console.log(12345);
 }
 
-const translate=()=>{
-  const query1=ref('')
-  if(lang.value=='en'){
-    query1.value=info.value.map(element => (element.content?element.content:element)).join('[]')
-  }else if(lang.value=='zh'){
-    info.value=info1.value
-    query1.value=info.value.map(element => (element.content?element.content:element)).join('[]')
+const translate = () => {
+  const query1 = ref('');
+
+  if (lang.value == 'en') {
+    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
+  } else if (lang.value == 'zh') {
+    info.value = info1.value;
+    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
   }
-  var appid = '20231117001883604'
-  var key = 'lAxlO8o4mTT0LkQXNW_V'
-  var salt = (new Date).getTime()
-  var query = query1.value
-  var from = 'auto'
-  var to = lang.value
-  var str1 = appid + query + salt + key
-  var sign = md5(str1)
-  axios.get('/trans',{params:{
-    q: query,
-    appid: appid,
-    salt: salt,
-    from: from,
-    to: to,
-    sign: sign
-  }}).then((res)=>{
-    result.value=res.data.trans_result[0].dst
-    console.log(res.data.trans_result[0].dst,'翻译成功咯')
+  const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
 
-    info.value =  res.data.trans_result[0].dst.split('[]')
-    console.log(info.value)
-  })
-}
+  const appid = '20231117001883604';
+  const key = 'lAxlO8o4mTT0LkQXNW_V';
+  const salt = (new Date()).getTime();
+  const query =query1.value
+  const from = 'auto';
+  const to = lang.value;
+  const str1 = appid + query + salt + key;
+  const sign = md5(str1);
 
+  axios.get('/trans', {
+    params: {
+      q: query,
+      appid: appid,
+      salt: salt,
+      from: from,
+      to: to,
+      sign: sign
+    }
+  }).then((res) => {
+
+
+    const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
+      return {
+        content: item
+      };
+    });
+
+    info.value = translatedInfo;
+
+
+  });
+};
 const change=(e)=>{
-console.log(e,'kkkkkk')
+
 if(e=='chinese'){
   lang.value='zh'
 }else if(e=='english'){
@@ -388,7 +581,7 @@ function chatWithAi({ content }) {
     data: messages,
   })
     .then((response) => {
-      console.log(response, "=========");
+  
       const { data } = response;
       const { status, result, source, history } = data;
       arrWithNews = source.filter(
@@ -409,7 +602,7 @@ function chatWithAi({ content }) {
       splitResult = splitResult.filter(function (element) {
         return element.trim() !== "";
       });
-      console.log("splitResult", splitResult);
+
       info.value.push({
         content: result,
       });
@@ -457,191 +650,6 @@ function scrollToBottom() {
 const language = ref("中文");
 //xuniren
 </script>
-
-<template>
-  <div class="main">
-    <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-    <el-select v-model="language" placeholder="一键翻译"
-      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
-      <el-option label="中文" value="chinese" />
-      <el-option label="英文" value="english" />
-    </el-select>
-    <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
-    <div class="box">
-      <div class="chatFrame" v-if="chatBoxIsShow">
-        <!-- 滚动框 -->
-        <el-scrollbar class="chatContent" ref="scrollBox">
-          <ul ref="chatBox" id="scrollBox">
-            <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
-              <span :class="[index % 2 === 0 ? '' : '']" :title="item.content"  v-if="item.content">{{ item.content }}</span>
-              <span :title="item.content" v-else>
-                {{ item }}
-              </span>
-            </li>
-          </ul>
-        </el-scrollbar>
-      </div>
-
-      <!-- 虚拟人 -->
-      <div class="right-box">
-        <div class="robot">
-          <!-- 这是你的虚拟人视频流的容器 -->
-          <div class="remote_stream" id="robot_stream">
-            <canvas id="canvas" class="canvas"></canvas>
-          </div>
-        </div>
-        <!-- 两个按钮 -->
-        <div class="chatBut" @click="chatBoxIsShow = !chatBoxIsShow">
-          <svg t="1698560429724" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-            p-id="10229" width="20" height="20">
-            <path
-              d="M683.7 922.7h-345c-73.5 0-133.3-59.8-133.3-133.3V459.8c0-73.5 59.8-133.3 133.3-133.3h345c73.5 0 133.3 59.8 133.3 133.3v329.6c0 73.5-59.8 133.3-133.3 133.3z m-345-506.9c-24.3 0-44.1 19.8-44.1 44.1v329.6c0 24.3 19.8 44.1 44.1 44.1h345c24.3 0 44.1-19.8 44.1-44.1V459.8c0-24.3-19.8-44.1-44.1-44.1h-345zM914.3 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-20 44.6-44.6 44.6zM111.7 759.6c-24.6 0-44.6-20-44.6-44.6V534.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6V715c0 24.7-19.9 44.6-44.6 44.6z"
-              fill="#ffffff" p-id="10230"></path>
-            <path
-              d="M511.2 415.8c-24.6 0-44.6-20-44.6-44.6V239.3c0-24.6 20-44.6 44.6-44.6s44.6 20 44.6 44.6v131.9c0 24.6-20 44.6-44.6 44.6z"
-              fill="#ffffff" p-id="10231"></path>
-            <path
-              d="M511.2 276.6c-49.2 0-89.2-40-89.2-89.2s40-89.2 89.2-89.2 89.2 40 89.2 89.2-40 89.2-89.2 89.2z m0-89.2h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0h0.2-0.2z m0 0z m0 0h0.2-0.2z m0 0h0.2-0.2z m0-0.1h0.2-0.2zM399 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9s50.9 22.8 50.9 50.9c0 28.1-22.8 50.9-50.9 50.9zM622.9 675.5c-28.1 0-50.9-22.8-50.9-50.9 0-28.1 22.8-50.9 50.9-50.9 28.1 0 50.9 22.8 50.9 50.9 0 28.1-22.8 50.9-50.9 50.9z"
-              fill="#ffffff" p-id="10232"></path>
-          </svg>
-        </div>
-        <div class="newsBut" @click="newsBoxIsShow = !newsBoxIsShow">
-          <svg t="1698559285380" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-            p-id="5066" width="20" height="20">
-            <path
-              d="M896 192v704H256.8c-71.2 0-128.8-57.6-128.8-128.8V256.8C128 185.6 185.6 128 256.8 128H768v512H257.6c-36 0-65.6 29.6-65.6 65.6v60.8c0 36 29.6 65.6 65.6 65.6H832V192h64zM768 704H256v64h512v-64z"
-              p-id="5067" fill="#ffffff"></path>
-          </svg>
-        </div>
-
-        <!-- 字幕 -->
-        <!-- <div class="subtitle-container">
-          <div
-              class="subtitle"
-              :key="index"
-          >
-            {{ subtitleRef }}
-          </div>
-        </div> -->
-        <!-- 输入的内容，左上角显示 -->
-        <li ref="chatBox" v-for="(item, index) in info" :key="index" class="question"
-          :class="[index % 2 === 0 ? 'right' : 'vanish']" v-show="index === info.length - 2">
-          <span v-if="item.content">{{ item.content }}</span>
-          <span v-else>{{ item }}</span>
-        </li>
-
-        <!-- 发送框 -->
-        <div class="sendBox">
-
-          <el-input v-model="msg" placeholder="Please input" class="input-with-select" id="result" @keyup.enter="sendmsg">
-            <!-- :suffix-icon="Microphone" -->
-            <template #append>
-              <el-button style="padding-right: 40px" id="btn_control">
-                <svg t="1695268139557" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="1815" width="16" height="16">
-                  <path
-                    d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z"
-                    fill="#6D7793" p-id="1816"></path>
-                </svg>
-              </el-button>
-
-              <el-button @click="sendmsg" type="primary" style="padding-right: 10px">
-                <svg t="1695268383161" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="2870" width="16" height="16">
-                  <path
-                    d="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
-                    p-id="2871"></path>
-                </svg>
-              </el-button>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <div class="newsBox" v-show="newsBoxIsShow">
-        <div class="abstract">
-          <!-- 参考文献 -->
-          <el-button class="butBox" text @click="dialogTableVisible1 = true">
-            参考文献
-          </el-button>
-          <el-drawer v-model="dialogTableVisible1" title="参考文献" size="35%">
-            <div>
-              <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
-                <el-table-column type="index" label=" " width="50" />
-                <el-table-column prop="title" label="标题" width="250" />
-                <el-table-column prop="author" label="作者" width="150" />
-                <el-table-column prop="time" label="时间" width="100" />
-                <el-table-column prop="if" label="影响因子" width="100" />
-                <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
-                  <template #default="scope">
-                    <el-button link type="primary" size="small" @click="showDrawer(scope.$index)">
-                      详情
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-drawer v-model="drawer1" append-to-body class="abstract_bgc">
-                <h3 class="abstract_title">
-                  {{ arrWithoutNews[selectedRowIndex].title }}
-                </h3>
-                <p v-if="selectedRowIndex !== null" class="abstract_content">
-                  {{ arrWithoutNews[selectedRowIndex].abstract }}
-                </p>
-              </el-drawer>
-            </div>
-          </el-drawer>
-        </div>
-        <div class="news">
-          <!-- 新闻 -->
-          <el-button class="butBox" text @click="dialogTableVisible2 = true">
-            新闻
-          </el-button>
-          <el-drawer v-model="dialogTableVisible2" title="新闻" size="35%">
-            <div>
-              <el-table row-key="id" :data="arrWithNews" style="width: 100%" stripe max-height="300">
-                <el-table-column type="index" label=" " width="50" />
-                <el-table-column prop="title" label="标题" width="350" />
-
-                <el-table-column prop="time" label="时间" width="200" />
-
-                <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
-                  <template #default="scope">
-                    <el-button link type="primary" size="small" @click="showDrawer1(scope.$index)">
-                      详情
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-drawer v-model="drawer2" append-to-body class="abstract_bgc">
-                <div class="news_link_title">
-                  <a :href="arrWithNews[selectedRowIndex].ref" target="_blank" class="news_link">
-                    {{ arrWithNews[selectedRowIndex].title }}
-
-                  </a>
-                </div>
-                <p v-if="selectedRowIndex !== null" class="abstract_content">
-                  {{ arrWithNews[selectedRowIndex].abstract }}
-                </p>
-              </el-drawer>
-            </div>
-          </el-drawer>
-
-
-          <!-- <el-dialog v-model="drawer2" title="相关新闻">
-            <div v-for="(item, index) in arrWithNews" :key="index">
-              <div>
-                
-                <el-link :href="item.ref" target="_blank" :underline="false" style="font-weight: bold" class="news_title">
-                  {{ item.title }}
-                </el-link>
-              </div>
-              <div class="news_content">{{ item.abstract }}</div>
-            </div>
-          </el-dialog> -->
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style lang="less" scoped>
 ul {
