@@ -1,9 +1,6 @@
-
 <template>
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-
-    <!-- 上方设置一键翻译 -->
     <el-select v-model="language" placeholder="一键翻译"
       style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
       <el-option label="中文" value="chinese" />
@@ -13,11 +10,11 @@
     <div class="box">
       <div class="chatFrame" v-if="chatBoxIsShow">
         <!-- 滚动框 -->
-        <!-- 左侧聊天框的设置 -->
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
               <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
+
             </li>
           </ul>
         </el-scrollbar>
@@ -185,7 +182,7 @@
 </template>
 <script setup>
 import { Base64 } from "js-base64";
-import { ElMessage, componentSizeMap } from "element-plus";
+import { ElMessage } from "element-plus";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { removeToken } from "../composables/auth";
@@ -195,12 +192,13 @@ import md5 from 'js-md5'
 
 // 退出登录操作
 function logout() {
+
   removeToken();
   totast("退出成功", "success");
   router.push('/login')
 }
 
-// 调用的live-2d模型
+
 const cubism2Model =
   "./src/assets/haru/haru_greeter_t03.model3.json";
 // "https://cdn.jsdelivr.net/gh/Matrix-King-Studio/virtual-human-llm-frontend@master/src/assets/live2d-widget-model-chitose/chitose.model.base.json";
@@ -231,11 +229,9 @@ onMounted(() => {
   };
   virtualHuman();
 });
-
-// 设置嘴巴张开的函数
 const setMouthOpenY = (v) => {
   v = Math.max(0, Math.min(1, v));
-  console.log( model2.internalModel.coreModel)
+
   // 这个地方需要进行调试
   // model2.internalModel.coreModel.setParamFloat("PARAM_MOUTH_OPEN_Y", v);
   model2.internalModel.coreModel.setParameterValueById("ParamMouthOpenY", v);
@@ -269,71 +265,26 @@ function showDrawer1(index) {
   drawer2.value = true;
 }
 
-// 单独发出语言之后的进行的翻译
-// const translate1 = (e) => {
-//   const query2 = ref('');
-//   if (e == 'en') {
-//     // query1.value = info.value.map(element => (element.content ? element.content  : element +"@"));
-//     query2.value = msg.value;
-//   } else if (e == 'zh') {
-//     // info.value = info1.value;
-//     query2.value = info.value;
-//   }
-//   console.log(msg.value);
-//   console.log(query2)
-//   // const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
-//   console.log(query2.value)
-//   const appid = '20231117001883604';
-//   const key = 'lAxlO8o4mTT0LkQXNW_V';
-//   const salt = (new Date()).getTime();
-//   const query = query2.value;
-//   const from = 'auto';
-//   const to = lang.value;
-//   const str1 = appid + query + salt + key;
-//   const sign = md5(str1);
-// // 调用外部的翻译的接口
-//   axios.get('/trans', {
-//     params: {
-//       q: query,
-//       appid: appid,
-//       salt: salt,
-//       from: from,
-//       to: to,
-//       sign: sign
-//     }
-
-//   }).then((res) => {
-//     // 执行成功之后的回调
-//     result.value = res.data.trans_result[0].dst;
-//     info.value = result.value;
-//     console.log(res.data.trans_result[0].dst);
-//   });
-// };
-
-
-
-// 对翻译的函数的设置
 const translate = () => {
   const query1 = ref('');
+
   if (lang.value == 'en') {
-    // query1.value = info.value.map(element => (element.content ? element.content  : element +"@"));
-    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@');
+    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
   } else if (lang.value == 'zh') {
     info.value = info1.value;
-    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@');
+    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
   }
-  console.log(query1.value);
   const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
 
   const appid = '20231117001883604';
   const key = 'lAxlO8o4mTT0LkQXNW_V';
   const salt = (new Date()).getTime();
-  const query = query1.value;
+  const query = query1.value
   const from = 'auto';
   const to = lang.value;
   const str1 = appid + query + salt + key;
   const sign = md5(str1);
-// 调用外部的翻译的接口
+
   axios.get('/trans', {
     params: {
       q: query,
@@ -343,20 +294,19 @@ const translate = () => {
       to: to,
       sign: sign
     }
-
   }).then((res) => {
-    // 执行成功之后的回调
+
+
     const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
       return {
-        content: item,
+        content: item
       };
     });
+    
     info.value = translatedInfo;
-    console.log(info.value);
+
   });
 };
-
-
 const change = (e) => {
 
   if (e == 'chinese') {
@@ -369,8 +319,6 @@ const change = (e) => {
   translate()
 }
 
-
-
 const scriptElement1 = document.createElement("script");
 const scriptElement2 = document.createElement("script");
 const scriptElement3 = document.createElement("script");
@@ -381,11 +329,7 @@ document.body.appendChild(scriptElement1);
 document.body.appendChild(scriptElement2);
 document.body.appendChild(scriptElement3);
 
-
 //文字转语音
-
-//将输入的文本列表逐个翻译并生成相应的音频进行播放
-
 function translateTextListAudio(textList) {
   okToSend.value = false;
   if (!textList || textList.length === 0) return;
@@ -397,7 +341,7 @@ function translateTextListAudio(textList) {
   const audioPlayer = new AudioPlayer("../public/dist");
   let intervalOpen;
   let intervalClose;
-  // 对于虚拟人的嘴巴进行设定，设置张开嘴的大小
+
   audioPlayer.onPlay = () => {
     intervalOpen = setInterval(() => {
       let randomOpenValue = 0.5 + (0.7 - 0.5) * Math.random();
@@ -422,6 +366,7 @@ function translateTextListAudio(textList) {
     } else {
       translateTextListAudio(textList);
     }
+
   };
 
   function getWebSocketUrl(apiKey, apiSecret) {
@@ -534,7 +479,7 @@ let okToSend = ref(true);
 
 function sendmsg() {
   var audioMessage = document.getElementById("result").value;
-  // translate1(lang.value);
+
   msg.value = audioMessage;
   if (msg.value.length < 1)
     return ElMessage({ message: "不能发送空消息！", type: "error" });
@@ -547,11 +492,9 @@ function sendmsg() {
   const content = msg.value;
   msg.value = ""; //清空输入框
   document.getElementById("result").value = "";
-  
+
   // console.log(chatBox.value.scrollHeight);
-    
-    // console.log( language.value)
-    translate(audioMessage);
+
   chatWithAi({
     content,
   });
@@ -560,10 +503,8 @@ function sendmsg() {
     content,
   });
   info1.value = info.value
-  
   setTimeout(() => {
     scrollToBottom();
-    // change(language.value)
   });
   // consoloe.log("123131");
 }
@@ -612,15 +553,10 @@ function ruleSplitString(string, length = 25) {
   return result;
 }
 
-
-
-
 let splitResult;
 let arrWithNews;
 let arrWithoutNews;
 
-
-// 执行语音聊天的调用的函数
 function chatWithAi({ content }) {
   const messages = {
     messages: [
@@ -632,10 +568,8 @@ function chatWithAi({ content }) {
   };
   console.log(messages);
   const textwaitting = "正在为您查询中...";
-  
-  subtitleRef.value = textwaitting;
 
-  // 对接南开的接口
+  subtitleRef.value = textwaitting;
   axios({
     method: "post",
     headers: {
@@ -644,7 +578,6 @@ function chatWithAi({ content }) {
     url: "/search_web",
     data: messages,
   })
-  // 南开接口调用成功之后的回调
     .then((response) => {
 
       const { data } = response;
@@ -658,24 +591,21 @@ function chatWithAi({ content }) {
 
       finalSource = source;
 
-      // 防止在搜索回答的时候,继续发送指令
-      if (status != 200) {
-        ElMessage({message: result, type: "error"});
-      }
+
+      // if (status != 200) {
+      //   ElMessage({message: result, type: "error"});
+      // }
 
       splitResult = ruleSplitString(result);
       splitResult = splitResult.filter(function (element) {
         return element.trim() !== "";
       });
-      
+
       info.value.push({
         content: result,
       });
-      // translate();
-      change(language.value)
       setTimeout(() => {
         scrollToBottom();
-        // change(language.value)
       });
 
       // delayedLoop(splitResult);
@@ -706,8 +636,6 @@ let index = 0;
 
 
 
-
-// 设置左侧的聊天框滚动到底部
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
   console.log(container, '************')
