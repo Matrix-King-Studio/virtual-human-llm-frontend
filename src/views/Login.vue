@@ -19,10 +19,10 @@
           <el-input type="password" class="inp" placeholder="请输入密码" v-model="LoginData.password" show-password />
         </el-form-item>
         <el-form-item prop="remember">
-          <el-checkbox label="记住密码" name="remember" />
+          <el-checkbox   label="记住密码" name="remember" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">
+          <el-button type="primary" @click="onSubmit" style="background-color: black;">
             开始登录
           </el-button>
         </el-form-item>
@@ -31,7 +31,7 @@
 
         <span></span>
 
-        <span><router-link to="/register">注册账号</router-link></span>
+        <span><router-link to="/register" style="color: black; " > 注册账号</router-link></span>
       </div>
     </div>
   </div>
@@ -104,6 +104,12 @@ formRef.value.validate((valid)=>{
     h2 {
       font-size: 30px;
       text-align: center;
+    }
+    .el-checkbox__label{
+      margin-top: -5px !important;
+      color: black !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
     }
     .login-container {
       width: 90%;

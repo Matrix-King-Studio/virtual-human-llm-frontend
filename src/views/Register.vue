@@ -2,7 +2,7 @@
     <div class="container">
         <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
         <div class="main_container">
-            <h3>新用户注册</h3>
+            <h2>新用户注册</h2>
             <div class="mian_box">
                 <el-form ref="formRef" label-width="100px" :model="registerForm" :rules="rules"
                     style="max-width: 660px ;min-width: 400px;" class="box_form">
@@ -38,7 +38,7 @@
                         <el-button @click="register">同意以上协议并注册</el-button>
                     </div>
                     <div class="bottom_right">
-                        <h3 @click="login">开始登陆</h3>
+                        <h3 @click="login" style="color: black;">开始登陆</h3>
                     </div>
                 </div>
             </div>
@@ -166,9 +166,7 @@ const register = () => {
         justify-content: space-between;
         align-items: center;
 
-        h3 {
-            color: black;
-        }
+
 
         .mian_box {
             display: flex;
@@ -186,6 +184,7 @@ const register = () => {
 
             .el-form-item__label {
                 font-size: 17px;
+                font-weight: 700;
             }
 
             .box_sure {
