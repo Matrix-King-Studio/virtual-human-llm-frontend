@@ -14,7 +14,11 @@
           <ul ref="chatBox" id="scrollBox">
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
               <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
-
+              <div v-if="index % 2 !== 0" class="msg-evaluate">
+                <el-button size="small" class="evaluate-btn">点赞</el-button>
+                <el-button size="small" class="evaluate-btn">点踩</el-button>
+                <el-button size="small" class="evaluate-btn">重答</el-button>
+              </div>
             </li>
           </ul>
         </el-scrollbar>
@@ -659,6 +663,7 @@ ul {
 }
 
 li.left {
+  position: relative;
   margin-right: 20px;
 }
 
@@ -674,6 +679,19 @@ li.left span {
   padding: 10px 15px;
   margin: 20px;
   color: rgba(0, 0, 0, 0.758);
+}
+
+li.left .msg-evaluate {
+  position: absolute;
+  bottom: -15px;
+  left: 20px;
+  width: 150px;
+  height: 25px;
+  border-radius: 20px 20px 20px 20px;
+  .evaluate-btn {
+    padding: 5px 6px;
+    border-radius: 20px 20px 20px 20px;
+  }
 }
 
 li.right {
