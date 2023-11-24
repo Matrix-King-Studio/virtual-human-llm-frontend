@@ -22,3 +22,34 @@ export function registration(username, email, password1, password2) {
 export function user() {
 	return axios.get("/auth/user/");
 }
+
+
+//封装保存消息日志的接口
+export function saveInfo(user_id,role,content,status,rebuid){
+	return axios.post("/conversation/save/",{
+		user_id,
+		role,
+		content,
+		status,
+		rebuid
+	})
+
+}
+
+// 调用获取消息日志的接口
+export function historyInfo(user_id,days){
+	return axios.post("/conversation/read/",{
+		user_id,
+		days
+	})
+}
+
+
+//更新状态接口
+export function update(user_id,status,time){
+	return axios.post("/conversation/update/status/",{
+		user_id,
+		status,
+		time
+	})
+}
