@@ -17,3 +17,8 @@ export function registration(username, email, password1, password2) {
 	}
 	)
 }
+
+// 封装读取用户信息的接口
+export function user() {
+	return axios.get("/auth/user/");
+}
