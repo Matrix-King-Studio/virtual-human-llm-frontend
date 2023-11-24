@@ -193,6 +193,7 @@ import { removeToken } from "../composables/auth";
 import router from '../router'
 import { totast } from "../composables/util";
 import md5 from 'js-md5'
+import { user } from "../utils/api";
 
 // 退出登录操作
 function logout() {
@@ -232,6 +233,15 @@ onMounted(() => {
     model2.scale.set(0.5);
   };
   virtualHuman();
+
+  // 读取用户信息
+  user()
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.error(error);
+  });
 });
 const setMouthOpenY = (v) => {
   v = Math.max(0, Math.min(1, v));
