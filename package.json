@@ -19,6 +19,7 @@
     "animate.css": "^4.1.1",
     "axios": "^1.5.0",
     "crypto-js": "^4.2.0",
+    "easy-typer-js": "^2.1.0",
     "element-plus": "^2.3.12",
     "js-base64": "^3.7.5",
     "js-md5": "^0.8.3",

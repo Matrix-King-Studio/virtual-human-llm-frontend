@@ -18,6 +18,10 @@ const routes = [
     path: '/test',
     component: () => import('../views/Test.vue'),  // 路由的组件
   },
+  {
+    path: '/chat',
+    component: () => import('../views/Chat.vue'),  // 路由的组件
+  },
 ];
 
 const router = createRouter({
