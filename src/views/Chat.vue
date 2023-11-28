@@ -1,4 +1,5 @@
 <template>
+
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
     <el-select v-model="language" placeholder="一键翻译"
@@ -74,6 +75,7 @@
             </template>
           </el-input>
         </div>
+
       </div>
     </div>
   </div>
@@ -87,6 +89,7 @@ import router from '../router'
 import { totast } from "../composables/util";
 import md5 from 'js-md5'
 import { user, saveInfo, historyInfo, update } from "../utils/api";
+
 
 
 
@@ -774,5 +777,7 @@ li.right span {
     }
 
   }
+
+
 }
 </style>
