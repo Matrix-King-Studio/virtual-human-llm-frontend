@@ -4,6 +4,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
   {
     path: '/',
+    component: () => import('../views/Choose.vue'),  // 路由的组件
+  },
+  {
+    path: '/home',
     component: () => import('../views/Home.vue'),  // 路由的组件
   },
   {

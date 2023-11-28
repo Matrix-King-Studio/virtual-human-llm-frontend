@@ -377,7 +377,6 @@ input[type="checkbox"]:checked + .check-trail .check-handler::before {
 .message-bubble .response .loading-icon{
   color: #1ab394;
 }
-
 .answer #chatBtn{
   background-color: #1ab394;
   border-color: #1ab394;
