@@ -27,7 +27,13 @@ export default defineConfig({
             },
             '/search_web': {
                 target: 'http://120.220.95.176:19114/',
-                changeOrigin: true
+                changeOrigin: true,
+                // rewrite: path => path.replace(/^\/search_web/, '')
+            },
+            '/search_web1': {
+                target: 'http://120.220.95.176:19114/search',
+                changeOrigin: true,
+                // rewrite: path => path.replace(/^\/search_web1/, '')
             },
             '/individuation': {
                 target: 'http://evo-hu.xf-yun.com',
