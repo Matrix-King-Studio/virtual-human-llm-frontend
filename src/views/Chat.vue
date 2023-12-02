@@ -1,11 +1,11 @@
 <template>
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-    <el-select v-model="language" placeholder="一键翻译"
+    <!-- <el-select v-model="language" placeholder="一键翻译"
       style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
       <el-option label="中文" value="chinese" />
       <el-option label="英文" value="english" />
-    </el-select>
+    </el-select> -->
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
       <!-- visiable1 -->

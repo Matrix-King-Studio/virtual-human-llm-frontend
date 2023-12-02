@@ -15,9 +15,9 @@
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
               <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
               <div v-if="index % 2 !== 0" class="msg-evaluate">
-          
+
               </div>
-              
+
             </li>
           </ul>
         </el-scrollbar>
@@ -225,11 +225,11 @@ onMounted(() => {
       backgroundColor: 0xffffff,
     });
 
-    // model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
-    // model4.x = -200;
-    // model4.y = -100;
-    // app.stage.addChild(model4);
-    // model4.scale.set(0.5);
+    model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
+    model4.x = -200;
+    model4.y = -100;
+    app.stage.addChild(model4);
+    model4.scale.set(0.5);
 
     model2 = await PIXI.live2d.Live2DModel.from(cubism2Model);
     model2.x = -200;
@@ -238,7 +238,7 @@ onMounted(() => {
     model2.scale.set(0.5);
   };
   virtualHuman();
-  
+
 
   // 读取用户信息
   user()
@@ -247,7 +247,7 @@ onMounted(() => {
       user_id = response.pk;
       days = 1;
       console.log(response.pk);
-      
+
     })
     .catch(error => {
       console.error(error);
@@ -306,7 +306,8 @@ const translate = () => {
     query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
   }
   const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
-
+  console.log(query1.value)
+  console.log("@@@@@!!!!!")
   const appid = '20231117001883604';
   const key = 'lAxlO8o4mTT0LkQXNW_V';
   const salt = (new Date()).getTime();
@@ -326,6 +327,7 @@ const translate = () => {
       sign: sign
     }
   }).then((res) => {
+    console.log(res)
     const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
       return {
         content: item
@@ -519,7 +521,8 @@ function sendmsg() {
       message: "待当前对话结束后，方可发送信息！",
       type: "error",
     });
-  const content = msg.value;
+  let content
+  content = msg.value;
   // 调用保存日志的接口
   saveContent = msg.value;
   console.log(saveContent);
@@ -531,15 +534,65 @@ function sendmsg() {
   console.log(role)
   console.log(content)
   // console.log(chatBox.value.scrollHeight);
+  // 调用翻译函数的接口
+
+  if (language.value == 'chinese') {
+    lang.value = 'zh'
+  } else if (language.value == 'english') {
+    lang.value = 'en'
+  } else {
+    lang.value = ''
+  }
+  const query1 = ref('');
+  query1.value = content;
+  const appid = '20231117001883604';
+  const key = 'lAxlO8o4mTT0LkQXNW_V';
+  const salt = (new Date()).getTime();
+  const query = query1.value;
+  const from = 'auto';
+  const to = lang.value;
+  console.log(language.value)
+  console.log(to)
+  console.log("@@@@@@!!!!!!!!!!!!!!!")
+  const str1 = appid + query + salt + key;
+  const sign = md5(str1);
+  let translateContent
+  console.log(query1.value)
+  console.log("@@@@@@@!!!!")
+
+  axios.get('/trans', {
+    params: {
+      q: query,
+      appid: appid,
+      salt: salt,
+      from: from,
+      to: to,
+      sign: sign
+    }
+  }).then((res) => {
+    // console.log("12312312312")
+    translateContent = res.data.trans_result[0].dst
+    content = translateContent
+    console.log("++++++++++++++")
+    console.log(content)
+    console.log(translateContent)
+    console.log("++++++++++++++++++")
+    info.value.push({
+      content,
+    });
+    info1.value = info.value
+  });
+  ///////////
 
   chatWithAi({
     content,
   });
 
-  info.value.push({
-    content,
-  });
-  info1.value = info.value
+  // info.value.push({
+  //   content,
+  // });
+  // info1.value = info.value
+
   setTimeout(() => {
     scrollToBottom();
   });
@@ -639,17 +692,63 @@ function chatWithAi({ content }) {
       splitResult = splitResult.filter(function (element) {
         return element.trim() !== "";
       });
+      //调用翻译的接口
+  if (language.value == 'chinese') {
+    lang.value = 'zh'
+  } else if (language.value == 'english') {
+    lang.value = 'en'
+  } else {
+    lang.value = ''
+  }
+  const query1 = ref('');
+  query1.value = result;
+  const appid = '20231117001883604';
+  const key = 'lAxlO8o4mTT0LkQXNW_V';
+  const salt = (new Date()).getTime();
+  const query = query1.value;
+  const from = 'auto';
+  const to = lang.value;
+  console.log(language.value)
+  console.log(to)
+  console.log("@@@@@@!!!!!!!!!!!!!!!")
+  const str1 = appid + query + salt + key;
+  const sign = md5(str1);
+  let translateContent
+  console.log(query1.value)
+  console.log("@@@@@@@!!!!")
 
-      info.value.push({
-        content: result,
-      });
+  axios.get('/trans', {
+    params: {
+      q: query,
+      appid: appid,
+      salt: salt,
+      from: from,
+      to: to,
+      sign: sign
+    }
+  }).then((res) => {
+    // console.log("12312312312")
+    translateContent = res.data.trans_result[0].dst
+    console.log("++++++++++++++")
+    console.log(content)
+    console.log(translateContent)
+    console.log("++++++++++++++++++")
+    info.value.push({
+      content:translateContent,
+    });
+    info1.value = info.value
+  });
+  /////////////////////
+      // info.value.push({
+      //   content: result,
+      // });
 
       // 对保存日志接口的调用，传入的参数值进行的匹配
       role = "virtual_human"
       saveContent = response.data.result
       saveStatus = null
       // 保存日志接口的调用
-    
+
       setTimeout(() => {
         scrollToBottom();
       });
@@ -681,8 +780,8 @@ const subtitleRef = ref("");
 let index = 0;
 let time;
 // 设置点赞和踩的更新
-function updateInfo(){
-  
+function updateInfo() {
+
 }
 
 
@@ -768,11 +867,12 @@ li+li {
   padding: 0;
 }
 
-.questionBox{
+.questionBox {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .main {
   display: flex;
   flex-direction: column;
