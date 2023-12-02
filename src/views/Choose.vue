@@ -1,12 +1,9 @@
 <template>
-    <div>
+    <div class="main_container">
         <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-        <h1>请选择你要进入的页面</h1>
+        <h1 style="height: 50px;  position: absolute;  top: 10px" >请选择你要进入的页面</h1>
         <div class="main">
             <router-link to="/home">虚拟人 </router-link>
-            
-        </div>
-        <div>
             <router-link to="/chat">chat对话</router-link>
         </div>
         
@@ -19,11 +16,28 @@
 
 </script>
 <style lang="less" scoped>
-.main_{
+.main_container{
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    align-items: center;
 }
+.main{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    a{
+        padding: 20px 50px ;
+        margin-top: 30px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 800;
+        font-size: 25px;
+        background-color: rgb(58, 52, 52);
+    }
+}
+
 
 
 

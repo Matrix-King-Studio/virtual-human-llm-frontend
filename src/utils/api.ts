@@ -54,9 +54,10 @@ export function update(user_id,status,time){
 	})
 }
 
-export function updateContent(user_id, content,time){
+export function updateContent(user_id,status, content,time){
 	return axios.post("/conversation/update/",{
 		user_id,
+		status,
 		content,
 		time
 	})
