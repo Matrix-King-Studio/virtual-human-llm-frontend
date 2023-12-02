@@ -47,9 +47,17 @@ export function historyInfo(user_id,days){
 
 //更新状态接口
 export function update(user_id,status,time){
-	return axios.post("/conversation/update/status/",{
+	return axios.post("/conversation/update/",{
 		user_id,
 		status,
+		time
+	})
+}
+
+export function updateContent(user_id, content,time){
+	return axios.post("/conversation/update/",{
+		user_id,
+		content,
 		time
 	})
 }
