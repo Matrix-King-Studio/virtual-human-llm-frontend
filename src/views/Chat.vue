@@ -1,20 +1,20 @@
 <template>
-
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-    <el-select v-model="language" placeholder="一键翻译"
+    <!-- <el-select v-model="language" placeholder="一键翻译"
       style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
       <el-option label="中文" value="chinese" />
       <el-option label="英文" value="english" />
-    </el-select>
+    </el-select> -->
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
-      <div class="questionBox" v-show="visiable1">
-        <div class="questionBox_top"> 
+      <!-- visiable1 -->
+      <div class="questionBox" v-show="false">
+        <div class="questionBox_top">
           <h1>防疫问答中心</h1>
-        <h3>欢迎使用防疫问答助手，请在下方对话框输入想要提问的问题</h3>
+          <h3>欢迎使用防疫问答助手，请在下方对话框输入想要提问的问题</h3>
         </div>
-          
+
         <div class="sendBox">
           <el-input v-model="msg" placeholder="请输入想提问的问题" class="input-with-select" id="result" @keyup.enter="sendmsg">
             <!-- :suffix-icon="Microphone" -->
@@ -26,8 +26,9 @@
           </el-input>
         </div>
       </div>
-      <div class="chatFrame" v-show="visiable">
-        <h1  :title="titlebiaoti.value" >防疫问答中心</h1>
+      <!-- visiable -->
+      <div class="chatFrame" v-show="true">
+        <h1 :title="titlebiaoti.value">防疫问答中心</h1>
         <!-- 滚动框 -->
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">
@@ -38,23 +39,24 @@
                   item.content }} </span>
               </div>
 
-              <div v-if="index % 2 !== 0" class="msg-evaluate">
-                <svg width="15" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  class="icon-md" style="cursor: pointer;" @click="handleThumbUp(index) "  >
-                  <path fill-rule="evenodd" clip-rule="evenodd"
-                    d="M12.1318 2.50389C12.3321 2.15338 12.7235 1.95768 13.124 2.00775L13.5778 2.06447C16.0449 2.37286 17.636 4.83353 16.9048 7.20993L16.354 8.99999H17.0722C19.7097 8.99999 21.6253 11.5079 20.9313 14.0525L19.5677 19.0525C19.0931 20.7927 17.5124 22 15.7086 22H6C4.34315 22 3 20.6568 3 19V12C3 10.3431 4.34315 8.99999 6 8.99999H8C8.25952 8.99999 8.49914 8.86094 8.6279 8.63561L12.1318 2.50389ZM10 20H15.7086C16.6105 20 17.4008 19.3964 17.6381 18.5262L19.0018 13.5262C19.3488 12.2539 18.391 11 17.0722 11H15C14.6827 11 14.3841 10.8494 14.1956 10.5941C14.0071 10.3388 13.9509 10.0092 14.0442 9.70591L14.9932 6.62175C15.3384 5.49984 14.6484 4.34036 13.5319 4.08468L10.3644 9.62789C10.0522 10.1742 9.56691 10.5859 9 10.8098V19C9 19.5523 9.44772 20 10 20ZM7 11V19C7 19.3506 7.06015 19.6872 7.17071 20H6C5.44772 20 5 19.5523 5 19V12C5 11.4477 5.44772 11 6 11H7Z"
-                    fill="currentColor"></path>
+              <div v-if="index % 2 !== 0">
+                <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                  style="cursor: pointer;" @click="handleThumbUp(index)" :class="item.status" ref="svgRef">
+                  <path fill-rule="nonzero" clip-rule="evenodd"
+                    d="M12.1318 2.50389C12.3321 2.15338 12.7235 1.95768 13.124 2.00775L13.5778 2.06447C16.0449 2.37286 17.636 4.83353 16.9048 7.20993L16.354 8.99999H17.0722C19.7097 8.99999 21.6253 11.5079 20.9313 14.0525L19.5677 19.0525C19.0931 20.7927 17.5124 22 15.7086 22H6C4.34315 22 3 20.6568 3 19V12C3 10.3431 4.34315 8.99999 6 8.99999H8C8.25952 8.99999 8.49914 8.86094 8.6279 8.63561L12.1318 2.50389ZM10 20H15.7086C16.6105 20 17.4008 19.3964 17.6381 18.5262L19.0018 13.5262C19.3488 12.2539 18.391 11 17.0722 11H15C14.6827 11 14.3841 10.8494 14.1956 10.5941C14.0071 10.3388 13.9509 10.0092 14.0442 9.70591L14.9932 6.62175C15.3384 5.49984 14.6484 4.34036 13.5319 4.08468L10.3644 9.62789C10.0522 10.1742 9.56691 10.5859 9 10.8098V19C9 19.5523 9.44772 20 10 20ZM7 11V19C7 19.3506 7.06015 19.6872 7.17071 20H6C5.44772 20 5 19.5523 5 19V12C5 11.4477 5.44772 11 6 11H7Z">
+                  </path>
                 </svg>
 
 
                 <svg width="15" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  class="icon-md" style="cursor: pointer; margin-left: 7px;" @click="handleThumbDown(index)">
+                  class="icon-mdb" style="cursor: pointer; margin-left: 7px;" @click="handleThumbDown(index)"
+                  ref="svgRef">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M11.8727 21.4961C11.6725 21.8466 11.2811 22.0423 10.8805 21.9922L10.4267 21.9355C7.95958 21.6271 6.36855 19.1665 7.09975 16.7901L7.65054 15H6.93226C4.29476 15 2.37923 12.4921 3.0732 9.94753L4.43684 4.94753C4.91145 3.20728 6.49209 2 8.29589 2H18.0045C19.6614 2 21.0045 3.34315 21.0045 5V12C21.0045 13.6569 19.6614 15 18.0045 15H16.0045C15.745 15 15.5054 15.1391 15.3766 15.3644L11.8727 21.4961ZM14.0045 4H8.29589C7.39399 4 6.60367 4.60364 6.36637 5.47376L5.00273 10.4738C4.65574 11.746 5.61351 13 6.93226 13H9.00451C9.32185 13 9.62036 13.1506 9.8089 13.4059C9.99743 13.6612 10.0536 13.9908 9.96028 14.2941L9.01131 17.3782C8.6661 18.5002 9.35608 19.6596 10.4726 19.9153L13.6401 14.3721C13.9523 13.8258 14.4376 13.4141 15.0045 13.1902V5C15.0045 4.44772 14.5568 4 14.0045 4ZM17.0045 13V5C17.0045 4.64937 16.9444 4.31278 16.8338 4H18.0045C18.5568 4 19.0045 4.44772 19.0045 5V12C19.0045 12.5523 18.5568 13 18.0045 13H17.0045Z"
                     fill="currentColor"></path>
                 </svg>
                 <svg width="15" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  class="icon-md" style="cursor: pointer; margin-left: 7px;" @click="repeated(index-1), repeatanswer(index)">
+                  style="cursor: pointer; margin-left: 7px;" @click=" repeated(index - 1)" ref="svgRef">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z"
                     fill="currentColor"></path>
@@ -88,7 +90,8 @@ import { removeToken } from "../composables/auth";
 import router from '../router'
 import { totast } from "../composables/util";
 import md5 from 'js-md5'
-import { user, saveInfo, historyInfo, update } from "../utils/api";
+import { user, saveInfo, historyInfo, update, updateContent } from "../utils/api";
+import { getColumnByCell } from "element-plus/es/components/table/src/util";
 
 
 
@@ -102,30 +105,64 @@ function logout() {
 const visiable = ref(false)
 const visiable1 = ref(true)
 const itemTimeRef = ref(null)
+const svgRef = ref(null)
 const titlebiaoti = ref("")
-let repeat 
+const svg_color = ref("icon-mdb")
+let updatecontent
 // 调用点赞的函数
-// 使用itemTimeRef引用
+
 const handleThumbUp = (index) => {
+  console.log(index)
   const itemId = itemTimeRef.value[index]?.getAttribute('id');
+  // svgRef.value.setAttribute('display', "none")
+  svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'upvote')
+  svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'null')
+  svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
+  // const ceshi = svgRef.value[((index-1)/2)*3 +2]
+
+  // console.log(ceshi)
+
   const status = "upvote";
-  // 根据需要使用itemId变量
-  console.log(itemId)
-  console.log(user_id)
-  console.log(status)
   update(user_id, status, itemId)
     .then(res => {
       console.log(res)
+      console.log(itemId)
       totast('点赞成功', "success")
     })
 
   // ...
 };
 
-const repeated = (index) => {
-  const content = itemTimeRef.value[index]?.getAttribute('title');
-  
+// 点踩函数的设置
+const handleThumbDown = (index) => {
+  const itemId = itemTimeRef.value[index]?.getAttribute('id');
+  svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'null')
+  svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'downvote')
+  svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
+  const status = "downvote";
+  // 根据需要使用itemId变量
+  console.log(itemId)
+  console.log(user_id)
+  console.log(status)
+  console.log(index)
+  update(user_id, status, itemId)
+    .then(res => {
+      console.log(res)
+      totast('点踩成功', "success")
+    })
 
+  console.log(titlebiaoti.value)
+  console.log("@@@@333")
+  // ...
+};
+
+
+// 点击函数调用返回值
+const repeated = (index) => {
+  // 获取问题
+  const content = itemTimeRef.value[index]?.getAttribute('title');
+  // 获取下方回答框的id值
+  const itemId = itemTimeRef.value[index + 1]?.getAttribute('id');
   const messages = {
     messages: [
       {
@@ -134,7 +171,18 @@ const repeated = (index) => {
       },
     ],
   };
-  console.log(messages);
+  // console.log(messages);
+  // 在查询的过程中，将这个字符串作为返回答界面的值
+  const textwaitting = "正在为您查询中...";
+  // const spanContent = itemTimeRef.value[index +1]?.getAttribute('id');
+  // 获取下方回答的title
+  const spanTitle = itemTimeRef.value[index + 1]?.getAttribute('title')
+  // 获取回答的框的元素
+  const spanElement = document.getElementById(itemId);
+  console.log(spanElement)
+  console.log("|||||||||||||")
+  spanElement.innerHTML = textwaitting;
+  // 调用南开的值，进行重新查询
   axios({
     method: "post",
     headers: {
@@ -146,36 +194,43 @@ const repeated = (index) => {
     .then((response) => {
       console.log(response)
       const { data } = response;
-      const {  result } = data;
+      const { result } = data;
       titlebiaoti.value = result
-
-      console.log(titlebiaoti.value)
-    console.log("@@@@*******")
+      const status = "null"
+      role = "virtual_human"
+      // 调用这个函数将回答的值返回到页面中
+      repeatanswer(index + 1)
+      // 将返回的内容定义到title中
+      itemTimeRef.value[index + 1]?.setAttribute('title', titlebiaoti.value)
+      updatecontent = titlebiaoti.value
+      totast("重新生成成功", "success")
+      // 更新日志的回调，更新的内容
+      updateContent(user_id, status, updatecontent, itemId)
+        .then(res => {
+          console.log(res)
+          saveContent = updatecontent
+          console.log(updatecontent)
+        })
     })
 
   // ...
 };
 
+// 将获取到的值进行返回到界面中的设置
 const repeatanswer = (index) => {
-  
+  // 获取回答框的id值
+  const content = itemTimeRef.value[index]?.getAttribute('id');
+  svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'null')
+  svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'null')
+  svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
+  console.log(index)
+  console.log("@@@@@212313")
+  // 通过id值获取html元素
+  const spanElement = document.getElementById(content);
+  // const spanText = spanElement.innerHTML;
+  spanElement.innerHTML = titlebiaoti.value
 };
 
-
-const handleThumbDown = (index) => {
-  const itemId = itemTimeRef.value[index]?.getAttribute('id');
-  const status = "downvote";
-  // 根据需要使用itemId变量
-  console.log(itemId)
-  console.log(user_id)
-  console.log(status)
-  update(user_id, status, itemId)
-    .then(res => {
-      console.log(res)
-      totast('点踩成功', "success")
-    })
-
-  // ...
-};
 
 
 let user_id;
@@ -186,28 +241,7 @@ let rebuild;
 let days
 
 let model2;
-let model4;
 onMounted(() => {
-  const virtualHuman = async () => {
-    const app = new PIXI.Application({
-      view: document.getElementById("canvas"),
-      autoStart: true,
-      backgroundColor: 0xffffff,
-    });
-
-    // model4 = await PIXI.live2d.Live2DModel.from(cubism4Model);
-    // model4.x = -200;
-    // model4.y = -100;
-    // app.stage.addChild(model4);
-    // model4.scale.set(0.5);
-
-    model2 = await PIXI.live2d.Live2DModel.from(cubism2Model);
-    model2.x = -200;
-    model2.y = -100;
-    app.stage.addChild(model2);
-    model2.scale.set(0.5);
-  };
-  virtualHuman();
 
   // 读取用户信息
   user()
@@ -220,25 +254,25 @@ onMounted(() => {
       // 在此基础上进行调用历史记录的接口
       historyInfo(user_id, days)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           const historyInformation = res.data.map(element => {
-            console.log(element.content)
+
             return {
               content: element.content,
-              time: element.time
+              time: element.time,
+              status: element.status
             }
           });
-          // const historyInfoTime = res.data.map(element => {
-          //   // console.log(element.content)
-          //   return {
-          //     time: element.time
-          //   }
-          // });
           info.value = historyInformation;
+          const asd = document.getElementById("msg-evaluate")
           // info.time = historyInfoTime
-          console.log(info.value)
+          // console.log(info.value)
           // console.log(info.time)
           console.log("@@@@@@@@")
+
+          setTimeout(() => {
+            scrollToBottom();
+          });
         })
     })
     .catch(error => {
@@ -253,6 +287,8 @@ const setMouthOpenY = (v) => {
   v = Math.max(0, Math.min(1, v));
 
 };
+
+
 
 const result = ref("")
 const lang = ref('')
@@ -270,16 +306,16 @@ let selectedRowIndex = ref(null);
 let dialogTableVisible1 = ref(false);
 let dialogTableVisible2 = ref(false);
 
-function showDrawer(index) {
-  selectedRowIndex = index;
-  drawer1.value = true;
+// function showDrawer(index) {
+//   selectedRowIndex = index;
+//   drawer1.value = true;
 
-}
+// }
 
-function showDrawer1(index) {
-  selectedRowIndex = index;
-  drawer2.value = true;
-}
+// function showDrawer1(index) {
+//   selectedRowIndex = index;
+//   drawer2.value = true;
+// }
 // 调用翻译的接口
 const translate = () => {
   const query1 = ref('');
@@ -356,7 +392,7 @@ function sendmsg() {
   visiable.value = true;
   visiable1.value = false;
   console.log(visiable.value)
-  console.log("不能发送性能消息")
+  // console.log("不能发送性能消息")
   if (msg.value.length < 1)
     return ElMessage({ message: "不能发送空消息！", type: "error" });
   // console.log(okToSend.value, "@@@@@@@@@@@@@@@");
@@ -504,6 +540,7 @@ function chatWithAi({ content }) {
       role = "virtual_human"
       saveContent = response.data.result
       saveStatus = null
+      rebuild = false
       // 保存日志接口的调用
       saveInfo(user_id, role, saveContent, saveStatus, rebuild)
         // 保存日志接口成功之后执行的回调
@@ -524,9 +561,9 @@ function chatWithAi({ content }) {
           // 在此基础上进行调用历史记录的接口
           historyInfo(user_id, days)
             .then((res) => {
-              console.log(res.data)
+              // console.log(res.data)
               const historyInformation = res.data.map(element => {
-                console.log(element.content)
+                // console.log(element.content)
                 return {
                   content: element.content,
                   time: element.time
@@ -540,9 +577,9 @@ function chatWithAi({ content }) {
               // });
               info.value = historyInformation;
               // info.time = historyInfoTime
-              console.log(info.value)
+              // console.log(info.value)
               // console.log(info.time)
-              console.log("@@@@@@@@")
+              // console.log("@@@@@@@@")
             })
         })
         .catch(error => {
@@ -553,7 +590,7 @@ function chatWithAi({ content }) {
       });
 
       // delayedLoop(splitResult);
-      translateTextListAudio(splitResult);
+      // translateTextListAudio(splitResult);
 
     })
 }
@@ -590,23 +627,28 @@ ul {
   font-size: 14px;
   line-height: 20px;
 }
-.questionBox{
+
+.questionBox {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-.questionBox_top{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-  h1{
+
+  .questionBox_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
     color: blue;
   }
-  h3{
+
+  h3 {
     color: red;
   }
 }
+
 li.left {
   margin-top: 10px;
   margin-left: 20px;
@@ -653,6 +695,7 @@ li.left span {
 
 li.left .msg-evaluate {
   padding-left: 50px;
+  display: block;
   // position: absolute;
   // bottom: -15px;
   // left: 20px;
@@ -664,6 +707,18 @@ li.left .msg-evaluate {
     padding: 5px 6px;
     border-radius: 20px 20px 20px 20px;
   }
+}
+
+.upvote path {
+  fill: blue;
+}
+
+.downvote path {
+  fill: blue;
+}
+
+.null path {
+  fill: black;
 }
 
 li.right {
@@ -753,10 +808,12 @@ li.right span {
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      h1{
+
+      h1 {
         color: blue;
         font-size: 40px;
       }
+
       .chatContent {
         // background: #ffffff45;
         // box-shadow: 1px 50px 99px 1px #9fb3f540;
@@ -777,7 +834,5 @@ li.right span {
     }
 
   }
-
-
 }
 </style>
