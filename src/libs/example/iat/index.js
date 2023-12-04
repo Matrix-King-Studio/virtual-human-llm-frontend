@@ -53,14 +53,15 @@
 
   function countdown() {
     let seconds = 60;
-    btnControl.innerText = `录音中（${seconds}s）`;
+    // btnControl.innerText = `录音中（${seconds}s）`;
+    btnControl.innerHTML = `<span style="color:black ;font-size:15px;"> 录音中（${seconds}s）</span>`
     countdownInterval = setInterval(() => {
       seconds = seconds - 1;
       if (seconds <= 0) {
         clearInterval(countdownInterval);
         recorder.stop();
       } else {
-        btnControl.innerText = `录音中（${seconds}s）`;
+        btnControl.innerHTML = `<span style="color:black;font-size:15px;"> 录音中（${seconds}s）</span>`
       }
     }, 1000);
   }

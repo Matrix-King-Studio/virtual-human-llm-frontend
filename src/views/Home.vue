@@ -19,7 +19,7 @@
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
               <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
               <div v-if="index % 2 !== 0" class="msg-evaluate">
-
+                
               </div>
 
             </li>
@@ -119,6 +119,7 @@
             </div>
           </el-drawer>
         </div>
+        
         <div class="news">
           <!-- 新闻 -->
           <el-button class="butBox" text @click="dialogTableVisible2 = true">

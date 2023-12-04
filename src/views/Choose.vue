@@ -23,9 +23,9 @@ import { totast } from "../composables/util";
 // 退出登录操作
 function logout() {
 
-  removeToken();
-  totast("退出成功", "success");
-  router.push('/login')
+    removeToken();
+    totast("退出成功", "success");
+    router.push('/login')
 }
 </script>
 <style lang="less" scoped>
