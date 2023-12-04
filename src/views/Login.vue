@@ -9,6 +9,7 @@
         ref="formRef"
         :model="LoginData"
         :rules="rules"
+        @keyup.enter="onSubmit"
       >
         <el-form-item prop="username">
           <span>用户名</span>
@@ -16,7 +17,7 @@
         </el-form-item>
         <el-form-item prop="password">
           <span>密码</span>
-          <el-input type="password" class="inp" placeholder="请输入密码" v-model="LoginData.password" show-password />
+          <el-input type="password" class="inp" placeholder="请输入密码"  v-model="LoginData.password" show-password />
         </el-form-item>
         <el-form-item prop="remember">
           <el-checkbox   label="记住密码" name="remember" />
