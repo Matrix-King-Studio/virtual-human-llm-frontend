@@ -391,16 +391,15 @@ let okToSend = ref(true);
 function sendmsg() {
   var audioMessage = document.getElementById("result").value;
   msg.value = audioMessage;
-  visiable.value = true;
-  visiable1.value = false;
   //console.log(visiable.value)
   // //console.log("不能发送性能消息")
   if (msg.value.length < 1)
     return ElMessage({ message: "不能发送空消息！", type: "error" });
   // //console.log(okToSend.value, "@@@@@@@@@@@@@@@");
+  // okToSend.value =false;
   if (okToSend.value == false)
     return ElMessage({
-      message: "待当前对话结束后，方可发送信息！",
+      message: "正在查询，请稍候！！！",
       type: "error",
     });
 
@@ -491,6 +490,7 @@ let arrWithoutNews;
 
 // 调用南开虚拟人的回答问题的接口
 function chatWithAi({ content }) {
+  okToSend.value =false;
   const messages = {
     messages: [
       {
@@ -590,7 +590,7 @@ function chatWithAi({ content }) {
       setTimeout(() => {
         scrollToBottom();
       });
-
+      okToSend.value =true;
       // delayedLoop(splitResult);
       // translateTextListAudio(splitResult);
 
