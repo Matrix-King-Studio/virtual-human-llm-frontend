@@ -620,6 +620,7 @@ let arrWithoutNews;
 
 // 调用南开虚拟人的回答问题的接口
 function chatWithAi({ content }) {
+  okToSend.value = false;
   const messages = {
     messages: [
       {
