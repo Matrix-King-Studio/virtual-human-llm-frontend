@@ -1,8 +1,12 @@
 <template>
   <div class="main">
+    <div id="ceshi"
+      style="height: 50px; position: absolute; left: 20px; top: 10px ;background-color: red; display: none; width: 20px;height: 20px;">
+      0
+    </div>
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-    <el-select v-model="language" placeholder="一键翻译"
-      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
+    <el-select v-model="language" placeholder="一键翻译" id="chooseBox"
+      style="width: 100px; height: 50px;   position: absolute; right: 200px; top: 10px ;" @change="change">
       <el-option label="中文" value="chinese" />
       <el-option label="英文" value="english" />
     </el-select>
@@ -15,14 +19,13 @@
             <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
               <span :class="[index % 2 === 0 ? '' : '']" :title="item.content">{{ item.content }}</span>
               <div v-if="index % 2 !== 0" class="msg-evaluate">
-
+                
               </div>
 
             </li>
           </ul>
         </el-scrollbar>
       </div>
-
       <!-- 虚拟人 -->
       <div class="right-box">
         <div class="robot">
@@ -54,7 +57,7 @@
               p-id="5067" fill="#ffffff"></path>
           </svg>
         </div>
-
+        <!-- {{ voiceNumber.value }} -->
         <!-- 字幕 -->
         <!-- <div class="subtitle-container">
           <div
@@ -65,34 +68,19 @@
           </div>
         </div> -->
         <!-- 输入的内容，左上角显示 -->
-        <li ref="chatBox" v-for="(item, index) in info" :key="index" class="question"
+        <!-- <li ref="chatBox" v-for="(item, index) in info" :key="index" class="question"
           :class="[index % 2 === 0 ? 'right' : 'vanish']" v-show="index === info.length - 2">
           <span>{{ item.content }}</span>
 
-        </li>
+        </li> -->
 
         <!-- 发送框 -->
         <div class="sendBox">
-
-          <el-input v-model="msg" placeholder="Please input" class="input-with-select" id="result" @keyup.enter="sendmsg">
+          <el-input v-model="msg" placeholder="Please input" class="input-with-select" id="result">
             <!-- :suffix-icon="Microphone" -->
             <template #append>
-              <el-button style="padding-right: 40px" id="btn_control">
-                <svg t="1695268139557" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="1815" width="16" height="16">
-                  <path
-                    d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z"
-                    fill="#6D7793" p-id="1816"></path>
-                </svg>
-              </el-button>
-
-              <el-button @click="sendmsg" type="primary" style="padding-right: 10px">
-                <svg t="1695268383161" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="2870" width="16" height="16">
-                  <path
-                    d="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
-                    p-id="2871"></path>
-                </svg>
+              <el-button id="btn_control" @click="voice">
+                点击开始录音
               </el-button>
             </template>
           </el-input>
@@ -131,6 +119,7 @@
             </div>
           </el-drawer>
         </div>
+        
         <div class="news">
           <!-- 新闻 -->
           <el-button class="butBox" text @click="dialogTableVisible2 = true">
@@ -186,7 +175,7 @@
 <script setup>
 import { Base64 } from "js-base64";
 import { ElMessage } from "element-plus";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect, watch, reactive } from "vue";
 import axios from "axios";
 import { removeToken } from "../composables/auth";
 import router from '../router'
@@ -217,6 +206,9 @@ const cubism4Model =
 
 let model2;
 let model4;
+const ceshi = document.getElementById("ceshi")
+const ceshiNumber = ref('点击开始录音')
+
 onMounted(() => {
   const virtualHuman = async () => {
     const app = new PIXI.Application({
@@ -243,16 +235,12 @@ onMounted(() => {
   // 读取用户信息
   user()
     .then(response => {
-      console.log(response);
       user_id = response.pk;
       days = 1;
-      console.log(response.pk);
-
     })
     .catch(error => {
       console.error(error);
     });
-  console.log(user_id)
 
 
 
@@ -306,8 +294,8 @@ const translate = () => {
     query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
   }
   const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
-  console.log(query1.value)
-  console.log("@@@@@!!!!!")
+  // //console.log(query1.value)
+  // //console.log("@@@@@!!!!!")
   const appid = '20231117001883604';
   const key = 'lAxlO8o4mTT0LkQXNW_V';
   const salt = (new Date()).getTime();
@@ -327,7 +315,7 @@ const translate = () => {
       sign: sign
     }
   }).then((res) => {
-    console.log(res)
+    // //console.log(res)
     const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
       return {
         content: item
@@ -338,7 +326,7 @@ const translate = () => {
 
   });
 };
-console.log(role);
+// //console.log(role);
 const change = (e) => {
 
   if (e == 'chinese') {
@@ -351,15 +339,7 @@ const change = (e) => {
   translate()
 }
 
-const scriptElement1 = document.createElement("script");
-const scriptElement2 = document.createElement("script");
-const scriptElement3 = document.createElement("script");
-scriptElement1.src = "./src/libs/example/crypto-js.js";
-scriptElement2.src = "./dists/index.umd.js";
-scriptElement3.src = "./src/libs/example/iat/index.js";
-document.body.appendChild(scriptElement1);
-document.body.appendChild(scriptElement2);
-document.body.appendChild(scriptElement3);
+
 
 //文字转语音
 function translateTextListAudio(textList) {
@@ -496,7 +476,7 @@ function translateTextListAudio(textList) {
       console.error(e);
     };
     ttsWS.onclose = (e) => {
-      // console.log(e);
+      // //console.log(e);
     };
   }
 
@@ -515,7 +495,7 @@ function sendmsg() {
   msg.value = audioMessage;
   if (msg.value.length < 1)
     return ElMessage({ message: "不能发送空消息！", type: "error" });
-  // console.log(okToSend.value, "@@@@@@@@@@@@@@@");
+  // //console.log(okToSend.value, "@@@@@@@@@@@@@@@");
   if (okToSend.value == false)
     return ElMessage({
       message: "待当前对话结束后，方可发送信息！",
@@ -525,15 +505,15 @@ function sendmsg() {
   content = msg.value;
   // 调用保存日志的接口
   saveContent = msg.value;
-  console.log(saveContent);
+  // //console.log(saveContent);
   msg.value = ""; //清空输入框
   document.getElementById("result").value = "";
   role = "user"
   saveStatus = null
-  console.log(user_id)
-  console.log(role)
-  console.log(content)
-  // console.log(chatBox.value.scrollHeight);
+  // //console.log(user_id)
+  // //console.log(role)
+  // //console.log(content)
+  // //console.log(chatBox.value.scrollHeight);
   // 调用翻译函数的接口
 
   if (language.value == 'chinese') {
@@ -551,15 +531,9 @@ function sendmsg() {
   const query = query1.value;
   const from = 'auto';
   const to = lang.value;
-  console.log(language.value)
-  console.log(to)
-  console.log("@@@@@@!!!!!!!!!!!!!!!")
   const str1 = appid + query + salt + key;
   const sign = md5(str1);
   let translateContent
-  console.log(query1.value)
-  console.log("@@@@@@@!!!!")
-
   axios.get('/trans', {
     params: {
       q: query,
@@ -570,13 +544,9 @@ function sendmsg() {
       sign: sign
     }
   }).then((res) => {
-    // console.log("12312312312")
+    // //console.log("12312312312")
     translateContent = res.data.trans_result[0].dst
     content = translateContent
-    console.log("++++++++++++++")
-    console.log(content)
-    console.log(translateContent)
-    console.log("++++++++++++++++++")
     info.value.push({
       content,
     });
@@ -658,7 +628,7 @@ function chatWithAi({ content }) {
       },
     ],
   };
-  console.log(messages);
+
   const textwaitting = "正在为您查询中...";
 
   subtitleRef.value = textwaitting;
@@ -693,52 +663,42 @@ function chatWithAi({ content }) {
         return element.trim() !== "";
       });
       //调用翻译的接口
-  if (language.value == 'chinese') {
-    lang.value = 'zh'
-  } else if (language.value == 'english') {
-    lang.value = 'en'
-  } else {
-    lang.value = ''
-  }
-  const query1 = ref('');
-  query1.value = result;
-  const appid = '20231117001883604';
-  const key = 'lAxlO8o4mTT0LkQXNW_V';
-  const salt = (new Date()).getTime();
-  const query = query1.value;
-  const from = 'auto';
-  const to = lang.value;
-  console.log(language.value)
-  console.log(to)
-  console.log("@@@@@@!!!!!!!!!!!!!!!")
-  const str1 = appid + query + salt + key;
-  const sign = md5(str1);
-  let translateContent
-  console.log(query1.value)
-  console.log("@@@@@@@!!!!")
+      if (language.value == 'chinese') {
+        lang.value = 'zh'
+      } else if (language.value == 'english') {
+        lang.value = 'en'
+      } else {
+        lang.value = ''
+      }
+      const query1 = ref('');
+      query1.value = result;
+      const appid = '20231117001883604';
+      const key = 'lAxlO8o4mTT0LkQXNW_V';
+      const salt = (new Date()).getTime();
+      const query = query1.value;
+      const from = 'auto';
+      const to = lang.value;
+      const str1 = appid + query + salt + key;
+      const sign = md5(str1);
+      let translateContent
 
-  axios.get('/trans', {
-    params: {
-      q: query,
-      appid: appid,
-      salt: salt,
-      from: from,
-      to: to,
-      sign: sign
-    }
-  }).then((res) => {
-    // console.log("12312312312")
-    translateContent = res.data.trans_result[0].dst
-    console.log("++++++++++++++")
-    console.log(content)
-    console.log(translateContent)
-    console.log("++++++++++++++++++")
-    info.value.push({
-      content:translateContent,
-    });
-    info1.value = info.value
-  });
-  /////////////////////
+      axios.get('/trans', {
+        params: {
+          q: query,
+          appid: appid,
+          salt: salt,
+          from: from,
+          to: to,
+          sign: sign
+        }
+      }).then((res) => {
+        translateContent = res.data.trans_result[0].dst
+        info.value.push({
+          content: translateContent,
+        });
+        info1.value = info.value
+      });
+      /////////////////////
       // info.value.push({
       //   content: result,
       // });
@@ -779,16 +739,11 @@ const subtitleRef = ref("");
 //延时函数
 let index = 0;
 let time;
-// 设置点赞和踩的更新
-function updateInfo() {
-
-}
 
 
 //设置滚动到底部的函数
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
-  console.log(container, '************')
   const lastMessage = container.lastElementChild;
   if (lastMessage) {
     lastMessage.scrollIntoView({ behavior: "smooth" });
@@ -797,6 +752,72 @@ function scrollToBottom() {
 
 const language = ref("chinese");
 //xuniren
+
+
+const voiceNumber = ref(0)
+const numbers = reactive({
+  a: 0,
+  b: 0
+})
+
+////////调用录音函数
+function voice() {
+  const el = document.getElementById('btn_control')
+  //console.log(el.innerText)
+  ceshiNumber.value = el.innerText
+}
+
+const hasElement = ref(false);
+// const el = document.getElementsByClassName("CLOSED")
+
+// const el =document.querySelector('.recording')
+// //console.log(el.length)
+
+watch(() => {
+  ceshiNumber.value
+  //console.log(":::::@@::::::::::")
+  // ceshiNumber.value
+  // document.getElementById('btn_control')
+  const condition = ceshiNumber.value
+  //console.log(condition)
+  //console.log("+@QQQQQQQQQQQ+++++++++")
+  if (condition.slice(0, 3) === "录音中") {
+    setTimeout(() => {
+      sendmsg();
+    }, 1500);
+
+  } else if (condition === "关闭连接中") {
+    setTimeout(() => {
+      sendmsg();
+    }, 1500);
+  }
+
+  // hasElement.value = !!el;
+  // //console.log(hasElement.value)
+  // //console.log("########")
+
+  // //console.log(hasElement.value)
+});
+
+
+
+
+// const startTimer = () => {
+//       setInterval(() => {
+//         voice();
+//       }, 1000);
+//     };
+
+const scriptElement1 = document.createElement("script");
+const scriptElement2 = document.createElement("script");
+const scriptElement3 = document.createElement("script");
+scriptElement1.src = "./src/libs/example/crypto-js.js";
+scriptElement2.src = "./dists/index.umd.js";
+scriptElement3.src = "./src/libs/example/iat/index.js";
+document.body.appendChild(scriptElement1);
+document.body.appendChild(scriptElement2);
+document.body.appendChild(scriptElement3);
+
 </script>
 
 <style lang="less" scoped>
@@ -816,6 +837,7 @@ li.left {
 li.vanish {
   display: none;
 }
+
 
 li.left span {
   display: inline-block;
@@ -844,6 +866,25 @@ li.left .msg-evaluate {
 li.right {
   margin-left: 20px;
   text-align: right;
+}
+
+/deep/.el-input-group--append>.el-input__wrapper {
+  display: none !important;
+}
+
+/deep/.el-input-group__append {
+
+  border-radius: 10px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/deep/.el-input-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 li.right span {
@@ -894,6 +935,7 @@ li+li {
       width: 100%;
       margin-top: 10px;
       border-radius: 10px;
+
       --el-border-radius-base: 10px !important;
     }
 
@@ -1086,5 +1128,4 @@ li+li {
       }
     }
   }
-}
-</style>
+}</style>

@@ -64,7 +64,7 @@ const registerForm = reactive({
 const rules = {
     name: [
         { required: true, message: '用户名不能为空', trigger: 'blur' },
-    
+
     ],
     email: [
         { required: true, message: '邮箱不能为空', trigger: 'blur' },
@@ -72,7 +72,7 @@ const rules = {
     ],
     password: [
         { required: true, message: '登陆密码不能为空', trigger: 'blur' },
-        {  min: 6, message: '登陆密码必须6位或以上', trigger: 'blur' },
+        { min: 6, message: '登陆密码必须6位或以上', trigger: 'blur' },
     ],
     passwordAgain: [
         { required: true, message: '请再次输入登陆密码', trigger: 'blur' },
@@ -102,7 +102,7 @@ function login() {
 const formRef = ref(null)
 // 对于点击注册之后的函数进行实现
 const register = () => {
-    formRef.value.validate(( ) => {
+    formRef.value.validate(() => {
         const { name, email, password, passwordAgain, code } = registerForm;
         // 进行表单验证
         if (!name || !email || !password || !passwordAgain) {
@@ -118,7 +118,7 @@ const register = () => {
             return;
         }
         // 判断密码是在这个范围之内
-        if( password.length < 6){
+        if (password.length < 6) {
             totast("登陆密码需要6位或以上", "error")
             return;
         }

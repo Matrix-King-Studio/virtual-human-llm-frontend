@@ -2,12 +2,14 @@
   var APPID = "85e46ea2";
   var API_SECRET = "OTY5NGRjMzk5OGY0NjQ1MWJkZTJhOWEy";
   var API_KEY = "e4edb9793dfcdf5bc3b71464f12390b3";
-
   let btnStatus = "UNDEFINED"; // "UNDEFINED" "CONNECTING" "OPEN" "CLOSING" "CLOSED"
 
   const btnControl = document.getElementById("btn_control");
 
   const recorder = new RecorderManager("../../dists");
+  const ceshi = document.getElementById("ceshi")
+  
+  
   recorder.onStart = () => {
     changeBtnStatus("OPEN");
   }
@@ -15,7 +17,7 @@
   let resultText = "";
   let resultTextTemp = "";
   let countdownInterval;
-
+  let number = 0
   /**
    * 获取websocket url
    * 该接口需要后端提供，这里为了方便前端处理
@@ -48,20 +50,23 @@
     return window.btoa(binary);
   }
 
+
   function countdown() {
     let seconds = 60;
-    btnControl.innerText = `录音中（${seconds}s）`;
+    // btnControl.innerText = `录音中（${seconds}s）`;
+    btnControl.innerHTML = `<span style="color:black ;font-size:15px;"> 录音中（${seconds}s）</span>`
     countdownInterval = setInterval(() => {
       seconds = seconds - 1;
       if (seconds <= 0) {
         clearInterval(countdownInterval);
         recorder.stop();
       } else {
-        btnControl.innerText = `录音中（${seconds}s）`;
+        btnControl.innerHTML = `<span style="color:black;font-size:15px;"> 录音中（${seconds}s）</span>`
       }
     }, 1000);
   }
 
+  // 点击按钮的三次状态
   function changeBtnStatus(status) {
     btnStatus = status;
     if (status === "CONNECTING") {
@@ -71,12 +76,13 @@
       resultTextTemp = "";
     } else if (status === "OPEN") {
       countdown();
-    } else if (status === "CLOSING") {
-      btnControl.innerText = "关闭连接中";
+    // } else if (status === "CLOSING") {
+    //   btnControl.innerText = "关闭连接中";
     } else if (status === "CLOSED") {
-      btnControl.innerHTML = '<svg t="1695268139557" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1815" width="16" height="16"><path d="M488.727273 930.909091v-93.905455a325.934545 325.934545 0 0 1-280.832-207.825454A325.073455 325.073455 0 0 1 186.181818 512h46.545455c0 34.792727 6.353455 68.677818 18.594909 100.421818A279.365818 279.365818 0 0 0 791.272727 512h46.545455c0 40.494545-7.400727 80.011636-21.643637 117.038545A325.934545 325.934545 0 0 1 535.272727 837.003636V930.909091h186.181818v46.545454H302.545455v-46.545454h186.181818z m23.272727-837.818182a186.181818 186.181818 0 0 0-186.181818 186.181818v232.727273a186.181818 186.181818 0 1 0 372.363636 0V279.272727a186.181818 186.181818 0 0 0-186.181818-186.181818z m0-46.545454c128.535273 0 232.727273 104.192 232.727273 232.727272v232.727273c0 128.535273-104.192 232.727273-232.727273 232.727273s-232.727273-104.192-232.727273-232.727273V279.272727c0-128.535273 104.192-232.727273 232.727273-232.727272z" fill="#6D7793" p-id="1816"></path></svg>';
+      btnControl.innerText = '点击开始录音';
     }
   }
+  
   function renderResult(resultData) {
     // 识别结束
     let jsonData = JSON.parse(resultData);
@@ -151,12 +157,13 @@
       renderResult(e.data);
     };
     iatWS.onerror = (e) => {
-      console.error(e);
       recorder.stop();
+      btnControl.click()
       changeBtnStatus("CLOSED");
     };
     iatWS.onclose = (e) => {
       recorder.stop();
+      btnControl.click()
       changeBtnStatus("CLOSED");
     };
   }
@@ -173,21 +180,23 @@
           },
         })
       );
-      if (isLastFrame) {
-        changeBtnStatus("CLOSING");
-      }
+      // if (isLastFrame) {
+      //   changeBtnStatus("CLOSING");
+      // }
     }
   };
   recorder.onStop = () => {
     clearInterval(countdownInterval);
   };
-
   btnControl.onclick = function () {
     if (btnStatus === "UNDEFINED" || btnStatus === "CLOSED") {
       connectWebSocket();
     } else if (btnStatus === "CONNECTING" || btnStatus === "OPEN") {
+      ceshi.innerHTML = btnStatus
+      
       // 结束录音
-      recorder.stop();
+      recorder.stop();      
     }
   };
+
 })();

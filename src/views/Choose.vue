@@ -1,5 +1,6 @@
 <template>
     <div class="main_container">
+        <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
         <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
         <h1 style="height: 50px;  position: absolute;  top: 10px" >请选择你要进入的页面</h1>
         <div class="main">
@@ -12,8 +13,20 @@
     </div>
 </template>
 
-<script>
+<script setup>
 
+import { removeToken } from "../composables/auth";
+import router from '../router'
+import { totast } from "../composables/util";
+
+
+// 退出登录操作
+function logout() {
+
+    removeToken();
+    totast("退出成功", "success");
+    router.push('/login')
+}
 </script>
 <style lang="less" scoped>
 .main_container{
