@@ -1,45 +1,22 @@
 <template>
   <div class="main">
     <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-    <!-- <el-select v-model="language" placeholder="一键翻译"
-      style="width: 100px; height: 50px; position: absolute; right: 200px; top: 10px" @change="change">
-      <el-option label="中文" value="chinese" />
-      <el-option label="英文" value="english" />
-    </el-select> -->
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
-      <!-- visiable1 -->
-      <div class="questionBox" v-show="false">
-        <div class="questionBox_top">
-          <h1>防疫问答中心</h1>
-          <h3>欢迎使用防疫问答助手，请在下方对话框输入想要提问的问题</h3>
-        </div>
-
-        <div class="sendBox">
-          <el-input v-model="msg" placeholder="请输入想提问的问题" class="input-with-select" id="result" @keyup.enter="sendmsg">
-            <!-- :suffix-icon="Microphone" -->
-            <template #append>
-              <el-button @click="sendmsg" type="primary" style="padding-right: 10px">
-                发送
-              </el-button>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <!-- visiable -->
       <div class="chatFrame" v-show="true">
         <h1 :title="titlebiaoti.value">防疫问答中心</h1>
         <!-- 滚动框 -->
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">
-            <li v-for="(item, index) in info" :key="index" :class="[index % 2 === 0 ? 'right' : 'left']">
+            <li v-for="(item, index) in info" :key="index"
+              :class="{ 'user': item.role === 'user', 'virtual_human': item.role !== 'user' }">
               <div class="dialog">
                 <div class="icoBox"></div>
-                <span :class="[index % 2 === 0 ? '' : '']" :title="item.content" :id="item.time" ref="itemTimeRef"> {{
+                <span  :class="{ 'user': item.role === 'user', 'virtual_human': item.role !== 'user' }" :title="item.content" :id="item.time" ref="itemTimeRef"> {{
                   item.content }} </span>
               </div>
 
-              <div v-if="index % 2 !== 0">
+              <div v-if="item.role === 'virtual_human'">
                 <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                   style="cursor: pointer;" @click="handleThumbUp(index)"
                   :class="item.status === 'upvote' ? 'upvote' : null" ref="svgRef">
@@ -68,7 +45,7 @@
           </ul>
         </el-scrollbar>
         <div class="sendBox">
-          <el-input v-model="msg" placeholder="请输入想提问的问题" class="input-with-select" id="result" @keyup.enter="sendmsg">
+          <el-input v-model="msg"  :disabled="isInputDisabled"  placeholder="请输入想提问的问题" class="input-with-select" id="result" @keyup.enter="sendmsg">
             <!-- :suffix-icon="Microphone" -->
             <template #append>
 
@@ -85,13 +62,15 @@
 </template>
 <script setup>
 import { ElMessage } from "element-plus";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 import { removeToken } from "../composables/auth";
 import router from '../router'
 import { totast } from "../composables/util";
+import { debounce } from 'lodash-es';
 import md5 from 'js-md5'
 import { user, saveInfo, historyInfo, update, updateContent } from "../utils/api";
+import { getToken } from "../composables/auth"
 import { getColumnByCell } from "element-plus/es/components/table/src/util";
 
 
@@ -111,57 +90,100 @@ const titlebiaoti = ref("")
 const svg_color = ref("icon-mdb")
 let updatecontent
 // 调用点赞的函数
-
-const handleThumbUp = (index) => {
-  //console.log(index)
+const handleThumbUp = debounce( (index) => {
+  ////console.log(index)
   const itemId = itemTimeRef.value[index]?.getAttribute('id');
   // svgRef.value.setAttribute('display', "none")
   svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'upvote')
   svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'null')
   svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
-  // const ceshi = svgRef.value[((index-1)/2)*3 +2]
-
-  // //console.log(ceshi)
-
   const status = "upvote";
+  
   update(user_id, status, itemId)
     .then(res => {
-      //console.log(res)
-      //console.log(itemId)
       totast('点赞成功', "success")
     })
+  const token = getToken()
+  user(token)
+    .then(response => {
+      user_id = response.pk;
+      days = 1;
+    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+      historyInfo(user_id, days)
+        .then((res) => {
+          // //console.log(res.data)
+          const historyInformation = res.data.map(element => {
 
+            return {
+              content: element.content,
+              time: element.time,
+              status: element.status,
+              role: element.role
+            }
+          });
+          info.value = historyInformation;
+          //console.log(info.value)
+        })
+    })
   // ...
-};
+},500);
+
 
 // 点踩函数的设置
-const handleThumbDown = (index) => {
+const handleThumbDown = debounce( (index) => {
+  //console.log(index)
+  //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
   const itemId = itemTimeRef.value[index]?.getAttribute('id');
+  //console.log(itemTimeRef.value[index])
   svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'null')
   svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'downvote')
   svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
   const status = "downvote";
-  // 根据需要使用itemId变量
-  //console.log(itemId)
-  //console.log(user_id)
-  //console.log(status)
-  //console.log(index)
   update(user_id, status, itemId)
     .then(res => {
-      //console.log(res)
+      ////console.log(res)
       totast('点踩成功', "success")
     })
+    //console.log(itemTimeRef.value[index])
+    const token = getToken()
+  // 调用获取用户消息的接口，同时对用户历史消息进行渲染，使用点踩可以进行运行
+  user(token)
+    .then(response => {
+      ////console.log(response);
+      user_id = response.pk;
+      days = 1;
+      ////console.log(response.pk);
 
-  //console.log(titlebiaoti.value)
-  //console.log("@@@@333")
-  // ...
-};
+      // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+      historyInfo(user_id, days)
+        .then((res) => {
+          // //console.log(res.data)
+          const historyInformation = res.data.map(element => {
+
+            return {
+              content: element.content,
+              time: element.time,
+              status: element.status,
+              role: element.role
+            }
+          });
+          info.value = historyInformation;
+          //console.log(info.value)
+        })
+    })
+    .catch(error => {
+      console.error(error);
+    });
+},500);
 
 
-// 点击函数调用返回值
-const repeated = (index) => {
+
+// 重新生成函数调用返回值
+const repeated = debounce ((index) => {
+
   // 获取问题
   const content = itemTimeRef.value[index]?.getAttribute('title');
+  // //console.log(centent)
   // 获取下方回答框的id值
   const itemId = itemTimeRef.value[index + 1]?.getAttribute('id');
   const messages = {
@@ -172,18 +194,9 @@ const repeated = (index) => {
       },
     ],
   };
-  // //console.log(messages);
-  //console.log(index)
   // 在查询的过程中，将这个字符串作为返回答界面的值
   const textwaitting = "正在为您查询中...";
-  // const spanContent = itemTimeRef.value[index +1]?.getAttribute('id');
-  // 获取下方回答的title
-  const spanTitle = itemTimeRef.value[index + 1]?.getAttribute('title')
-  // 获取回答的框的元素
-  const spanElement = document.getElementById(itemId);
-  //console.log(spanElement)
-  //console.log("|||||||||||||")
-  spanElement.innerHTML = textwaitting;
+  itemTimeRef.value[index + 1].innerHTML = textwaitting;
   // 调用南开的值，进行重新查询
   axios({
     method: "post",
@@ -194,7 +207,7 @@ const repeated = (index) => {
     data: messages,
   })
     .then((response) => {
-      //console.log(response)
+      ////console.log(response)
       const { data } = response;
       const { result } = data;
       titlebiaoti.value = result
@@ -203,35 +216,62 @@ const repeated = (index) => {
       // 调用这个函数将回答的值返回到页面中
       repeatanswer(index + 1)
       // 将返回的内容定义到title中
-      itemTimeRef.value[index + 1]?.setAttribute('title', titlebiaoti.value)
+      // itemTimeRef.value[index + 1]?.setAttribute('title', titlebiaoti.value)
       updatecontent = titlebiaoti.value
       totast("重新生成成功", "success")
       // 更新日志的回调，更新的内容
       updateContent(user_id, status, updatecontent, itemId)
         .then(res => {
-          //console.log(res)
           saveContent = updatecontent
-          //console.log(updatecontent)
+        })
+        const token = getToken()
+  // 调用获取用户消息的接口，同时对用户历史消息进行渲染，使用点踩可以进行运行
+  user(token)
+    .then(response => {
+      ////console.log(response);
+      user_id = response.pk;
+      days = 1;
+      ////console.log(response.pk);
+
+      // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+      historyInfo(user_id, days)
+        .then((res) => {
+          // //console.log(res.data)
+          const historyInformation = res.data.map(element => {
+
+            return {
+              content: element.content,
+              time: element.time,
+              status: element.status,
+              role: element.role
+            }
+          });
+          info.value = historyInformation;
+          //console.log(info.value)
         })
     })
+    .catch(error => {
+      console.error(error);
+    });
 
+    })
   // ...
-};
+},500);
 
 // 将获取到的值进行返回到界面中的设置
-const repeatanswer = (index) => {
+// const sendmsg = debounce(() => {
+const repeatanswer =  (index) => {
   // 获取回答框的id值
-  const content = itemTimeRef.value[index]?.getAttribute('id');
   svgRef.value[((index - 1) / 2) * 3]?.setAttribute('class', 'null')
   svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute('class', 'null')
   svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute('class', 'null')
-  //console.log(index)
-  //console.log("@@@@@212313")
-  // 通过id值获取html元素
-  const spanElement = document.getElementById(content);
-  // const spanText = spanElement.innerHTML;
-  spanElement.innerHTML = titlebiaoti.value
+
+  itemTimeRef.value[index].innerHTML = titlebiaoti.value
+  //console.log(itemTimeRef.value[index])
+  //console.log("@@@@@@@@@@@@")
 };
+
+
 
 
 
@@ -244,14 +284,14 @@ let days
 
 let model2;
 onMounted(() => {
-
+  const token = getToken()
   // 读取用户信息
-  user()
+  user(token)
     .then(response => {
-      //console.log(response);
+      ////console.log(response);
       user_id = response.pk;
       days = 1;
-      //console.log(response.pk);
+      ////console.log(response.pk);
 
       // 在此基础上进行调用历史记录的接口
       historyInfo(user_id, days)
@@ -262,16 +302,12 @@ onMounted(() => {
             return {
               content: element.content,
               time: element.time,
-              status: element.status
+              status: element.status,
+              role: element.role
             }
           });
           info.value = historyInformation;
-
-          // info.time = historyInfoTime
-          // //console.log(info.value)
-          // //console.log(historystatus)
-          // //console.log("@@@@@@@@")
-
+          //console.log(info.value)
           setTimeout(() => {
             scrollToBottom();
           });
@@ -308,70 +344,6 @@ let selectedRowIndex = ref(null);
 let dialogTableVisible1 = ref(false);
 let dialogTableVisible2 = ref(false);
 
-// function showDrawer(index) {
-//   selectedRowIndex = index;
-//   drawer1.value = true;
-
-// }
-
-// function showDrawer1(index) {
-//   selectedRowIndex = index;
-//   drawer2.value = true;
-// }
-// 调用翻译的接口
-const translate = () => {
-  const query1 = ref('');
-
-  if (lang.value == 'en') {
-    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
-  } else if (lang.value == 'zh') {
-    info.value = info1.value;
-    query1.value = info.value.map(element => (element.content ? element.content : element)).join('@ ');
-  }
-  const queryWithoutSymbols = query1.value.replace(/[^@]/g, '');
-
-  const appid = '20231117001883604';
-  const key = 'lAxlO8o4mTT0LkQXNW_V';
-  const salt = (new Date()).getTime();
-  const query = query1.value
-  const from = 'auto';
-  const to = lang.value;
-  const str1 = appid + query + salt + key;
-  const sign = md5(str1);
-
-  axios.get('/trans', {
-    params: {
-      q: query,
-      appid: appid,
-      salt: salt,
-      from: from,
-      to: to,
-      sign: sign
-    }
-  }).then((res) => {
-    const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
-      return {
-        content: item
-      };
-    });
-
-    info.value = translatedInfo;
-
-  });
-};
-// 调用选择语言的函数
-const change = (e) => {
-
-  if (e == 'chinese') {
-    lang.value = 'zh'
-  } else if (e == 'english') {
-    lang.value = 'en'
-  } else {
-    lang.value = ''
-  }
-  translate()
-}
-
 const scriptElement1 = document.createElement("script");
 const scriptElement2 = document.createElement("script");
 const scriptElement3 = document.createElement("script");
@@ -386,58 +358,80 @@ document.body.appendChild(scriptElement3);
 const msg = ref(""); //输入内容
 
 // 发送消息
-let okToSend = ref(true);
+const okToSend = ref(true);
 
+const isInputDisabled = ref(false);
 function sendmsg() {
+  isInputDisabled.value = true
+  setTimeout(() => {
+    sendMsg();
+  }, 500);
+}
+
+
+const sendMsg = debounce (() => {
   var audioMessage = document.getElementById("result").value;
   msg.value = audioMessage;
-  //console.log(visiable.value)
-  // //console.log("不能发送性能消息")
-  if (msg.value.length < 1)
+  ////console.log(visiable.value)
+  // ////console.log("不能发送性能消息")
+  if (msg.value.length < 1){
+    isInputDisabled.value = false
     return ElMessage({ message: "不能发送空消息！", type: "error" });
-  // //console.log(okToSend.value, "@@@@@@@@@@@@@@@");
+  }
+  // ////console.log(okToSend.value, "@@@@@@@@@@@@@@@");
   // okToSend.value =false;
-  if (okToSend.value == false)
+  if (okToSend.value == false){
     return ElMessage({
       message: "正在查询，请稍候！！！",
       type: "error",
-    });
+    })
+    
+  }
+    ;
 
   const content = msg.value;
   // 调用保存日志的接口
   saveContent = msg.value;
-  //console.log(saveContent);
+  ////console.log(saveContent);
   msg.value = ""; //清空输入框
   document.getElementById("result").value = "";
   role = "user"
   saveStatus = null
-  //console.log(user_id)
-  //console.log(role)
-  //console.log(content)
+  // 调用保存日志的接口
+  saveContent = content;
+  role = "user"
+  saveStatus = null
+  ////console.log(user_id)
+  ////console.log(role)
+  ////console.log(content)
   // 保存日志接口的调用
+ 
+
   saveInfo(user_id, role, saveContent, saveStatus, rebuild)
     // 保存日志接口成功之后执行的回调
     .then(res => {
-      //console.log(res)
+      ////console.log(res)
     })
     .catch(err => {
       // 失败之后执行的回调
     })
-  // //console.log(chatBox.value.scrollHeight);
-
-  chatWithAi({
-    content,
-  });
+    setTimeout(() => {
+    chatWithAi({ content });
+  }, 1000);
+  // chatWithAi({
+  //   content,
+  // });
 
   info.value.push({
+    role,
     content,
   });
   info1.value = info.value
   setTimeout(() => {
     scrollToBottom();
   });
-  // consoloe.log("123131");
-}
+  okToSend.value = true
+},500) 
 
 const info = ref([]);
 const info1 = ref([]);
@@ -490,7 +484,7 @@ let arrWithoutNews;
 
 // 调用南开虚拟人的回答问题的接口
 function chatWithAi({ content }) {
-  okToSend.value =false;
+  okToSend.value = false;
   const messages = {
     messages: [
       {
@@ -499,7 +493,7 @@ function chatWithAi({ content }) {
       },
     ],
   };
-  //console.log(messages);
+  ////console.log(messages);
   const textwaitting = "正在为您查询中...";
 
   subtitleRef.value = textwaitting;
@@ -512,6 +506,7 @@ function chatWithAi({ content }) {
     data: messages,
   })
     .then((response) => {
+      ////////成功之后执行下方的回调
 
       const { data } = response;
       const { status, result, source, history } = data;
@@ -536,6 +531,7 @@ function chatWithAi({ content }) {
 
       info.value.push({
         content: result,
+        role: 'virtual_human'
       });
 
       // 对保存日志接口的调用，传入的参数值进行的匹配
@@ -547,53 +543,47 @@ function chatWithAi({ content }) {
       saveInfo(user_id, role, saveContent, saveStatus, rebuild)
         // 保存日志接口成功之后执行的回调
         .then(res => {
-          //console.log(res)
+          ////console.log(res)
         })
         .catch(err => {
           // 失败之后执行的回调
         })
+        const token = getToken()
+  user(token)
+    .then(response => {
+      user_id = response.pk;
+      days = 1;
+    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+      historyInfo(user_id, days)
+        .then((res) => {
+          // //console.log(res.data)
+          const historyInformation = res.data.map(element => {
 
-      user()
-        .then(response => {
-          //console.log(response);
-          user_id = response.pk;
-          days = 1;
-          //console.log(response.pk);
-
-          // 在此基础上进行调用历史记录的接口
-          historyInfo(user_id, days)
-            .then((res) => {
-              // //console.log(res.data)
-              const historyInformation = res.data.map(element => {
-                // //console.log(element.content)
-                return {
-                  content: element.content,
-                  time: element.time
-                }
-              });
-              // const historyInfoTime = res.data.map(element => {
-              //   // //console.log(element.content)
-              //   return {
-              //     time: element.time
-              //   }
-              // });
-              info.value = historyInformation;
-              // info.time = historyInfoTime
-              // //console.log(info.value)
-              // //console.log(info.time)
-              // //console.log("@@@@@@@@")
-            })
+            return {
+              content: element.content,
+              time: element.time,
+              status: element.status,
+              role: element.role
+            }
+          });
+          info.value = historyInformation;
+          //console.log(info.value)
         })
-        .catch(error => {
-          console.error(error);
-        });
+    })
+
+
       setTimeout(() => {
         scrollToBottom();
       });
-      okToSend.value =true;
-      // delayedLoop(splitResult);
-      // translateTextListAudio(splitResult);
 
+
+      isInputDisabled.value = false
+      okToSend.value = true;
+      //console.log(okToSend.value)
+    })
+    .catch((err)=>{
+      totast("聊天服务端错误","error")
+      isInputDisabled.value = false;
     })
 }
 
@@ -610,7 +600,7 @@ let time;
 //设置滚动到底部的函数
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
-  //console.log(container, '************')
+  ////console.log(container, '************')
   const lastMessage = container.lastElementChild;
   if (lastMessage) {
     lastMessage.scrollIntoView({ behavior: "smooth" });
@@ -651,7 +641,7 @@ ul {
   }
 }
 
-li.left {
+li.virtual_human {
   margin-top: 10px;
   margin-left: 20px;
   display: flex;
@@ -684,7 +674,7 @@ li.vanish {
   display: none;
 }
 
-li.left span {
+li.virtual_human span {
   width: 100%;
   display: inline-block;
   // background: #cfcfcf00;
@@ -695,7 +685,7 @@ li.left span {
   color: rgba(0, 0, 0, 0.758);
 }
 
-li.left .msg-evaluate {
+li.virtual_human .msg-evaluate {
   padding-left: 50px;
   display: block;
   // position: absolute;
@@ -723,7 +713,7 @@ li.left .msg-evaluate {
   fill: black;
 }
 
-li.right {
+li.user {
   margin-top: 10px;
   margin-left: 20px;
   display: flex;
@@ -751,13 +741,15 @@ li.right {
   }
 }
 
-li.right span {
+li.user span {
+  width: 100%;
   display: inline-block;
-  // background: linear-gradient(180deg, #4c94f5 0%, #2dc7ff 100%);
-  // box-shadow: 3px 50px 50px 1px rgba(67, 180, 255, 0.16);
+  // background: #cfcfcf00;
   // border-radius: 20px 20px 20px 20px;
-  color: black;
+  // box-shadow: 5px 5px 5px 5px rgba(67, 180, 255, 0.16);
   padding: 10px 15px;
+  // margin: 20px;
+  color: rgba(0, 0, 0, 0.758);
 }
 
 // li+li {
