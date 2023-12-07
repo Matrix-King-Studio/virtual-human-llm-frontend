@@ -22,12 +22,11 @@
                         <el-input v-model="registerForm.code" placeholder="请输入验证码" />
                     </el-form-item> -->
                 </el-form>
-                <div class="box_sure">
+                <!-- <div class="box_sure">
                     <el-checkbox v-model="checked">
                         <h6>我已阅读并同意《用户注册协议》</h6>
                     </el-checkbox>
-                </div>
-
+                </div> -->
                 <div class="box_bottom">
                     <div class="bottom_left">
                         <!-- 整体样式懒得写了，直接用空格代替 -->
@@ -50,8 +49,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { totast } from '../composables/util'
 import { registration } from "../utils/api"
-// 设置复选框
-const checked = ref(false)
+
 // 设置接收传入的注册表单的值
 const registerForm = reactive({
     name: '',
@@ -128,12 +126,6 @@ const register = () => {
             return;
         }
 
-        if (!checked.value) {
-            // 用户未同意协议，进行提示或处理
-            // 例如：this.$message.error('请同意用户注册协议');
-            totast("请同意用户注册协议！", "error")
-            return;
-        }
 
         // if(!valid){
         //     totast("请检查是否填写准确！","error")
@@ -141,7 +133,7 @@ const register = () => {
         registration(registerForm.name, registerForm.email, registerForm.password, registerForm.passwordAgain)
             // 执行成功的回调
             .then(res => {
-                // console.log(res)
+                console.log(res)
                 totast("注册成功！请登录！", "success")
                 router.push("/login")
             })
@@ -174,7 +166,7 @@ const register = () => {
             justify-content: space-around;
             align-items: center;
             width: 500px;
-            height: 450px;
+            height: 400px;
             background-color: white;
             border-radius: 10px;
 

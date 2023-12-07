@@ -182,6 +182,8 @@ import router from '../router'
 import { totast } from "../composables/util";
 import md5 from 'js-md5'
 import { user } from "../utils/api";
+import { getToken } from "../composables/auth"
+
 
 // 退出登录操作
 function logout() {
@@ -231,9 +233,9 @@ onMounted(() => {
   };
   virtualHuman();
 
-
+  const token =getToken()
   // 读取用户信息
-  user()
+  user(token)
     .then(response => {
       user_id = response.pk;
       days = 1;
@@ -874,12 +876,15 @@ li.right {
 }
 
 /deep/.el-input-group__append {
-
+  padding: 0;
   border-radius: 10px;
-  padding: 10px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/deep/.el-input-group__append .el-button{
+  margin: 10px 0;
 }
 
 /deep/.el-input-group {

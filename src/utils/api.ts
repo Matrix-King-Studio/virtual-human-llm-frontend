@@ -19,10 +19,13 @@ export function registration(username, email, password1, password2) {
 }
 
 // 封装读取用户信息的接口
-export function user() {
-	return axios.get("/auth/user/");
+export function user(token) {
+	return axios.get("/auth/user/",{
+		headers: {
+			Authorization: "Token " +  token
+		}
+	});
 }
-
 
 //封装保存消息日志的接口
 export function saveInfo(user_id,role,content,status,rebuid){
