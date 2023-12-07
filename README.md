@@ -1,7 +1,20 @@
-# Vue 3 + Vite
+# 项目部署
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+服务器地址
+- IP：39.99.254.148
+- 用户名：root
+- 密码：Dial-2023
 
-## Recommended IDE Setup
+安装宝塔
+```shell
+wget -O install.sh https://download.bt.cn/install/install-ubuntu_6.0.sh && sudo bash install.sh ed8484bec
+```
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+========================面板账户登录信息==========================
+
+- 外网面板地址: https://39.99.254.148:37281/4db36ae6
+- 内网面板地址: https://172.29.177.20:37281/4db36ae6
+- username: uugra3ie
+- password: 535cf18f
+
+阿里云服务器添加安全组规则，增加三个端口：37281（宝塔运维用）、10001（虚拟人后端用）、10002（虚拟人前端用）
