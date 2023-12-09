@@ -643,7 +643,7 @@ ul {
 
 li.virtual_human {
   margin-top: 10px;
-  margin-left: 20px;
+  // margin-left: 20px;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -715,7 +715,7 @@ li.virtual_human .msg-evaluate {
 
 li.user {
   margin-top: 10px;
-  margin-left: 20px;
+  // margin-left: 20px;
   display: flex;
   // justify-content: flex-start;
   flex-direction: column;
@@ -765,7 +765,8 @@ li.user span {
 }
 
 .el-input-group {
-  width: 92% !important;
+  width: 100% !important;
+  padding: 0 20px;
 }
 
 .main {
@@ -820,7 +821,7 @@ li.user span {
 
         // overflow-x: hidden;
         .overNone {
-          max-width: 120px;
+          // max-width: 120px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
