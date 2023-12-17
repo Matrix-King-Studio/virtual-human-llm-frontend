@@ -96,11 +96,11 @@
             <div>
               <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
                 <el-table-column type="index" label=" " width="50" />
-                <el-table-column prop="title" label="标题" width="250" />
-                <el-table-column prop="author" label="作者" width="150" />
-                <el-table-column prop="time" label="时间" width="100" />
-                <el-table-column prop="if" label="影响因子" width="100" />
-                <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
+                <el-table-column prop="query" label="相关问题" width="250" />
+                <!-- <el-table-column prop="author" label="作者" width="150" /> -->
+                <!-- <el-table-column prop="time" label="时间" width="100" /> -->
+                <!-- <el-table-column prop="if" label="影响因子" width="100" /> -->
+                <el-table-column fixed="right" prop="answer" label="摘要" width="100">
                   <template #default="scope">
                     <el-button link type="primary" size="small" @click="showDrawer(scope.$index)">
                       详情
@@ -110,10 +110,10 @@
               </el-table>
               <el-drawer v-model="drawer1" append-to-body class="abstract_bgc">
                 <h3 class="abstract_title">
-                  {{ arrWithoutNews[selectedRowIndex].title }}
+                  {{ arrWithoutNews[selectedRowIndex].query }}
                 </h3>
                 <p v-if="selectedRowIndex !== null" class="abstract_content">
-                  {{ arrWithoutNews[selectedRowIndex].abstract }}
+                  {{ arrWithoutNews[selectedRowIndex].answer }}
                 </p>
               </el-drawer>
             </div>
@@ -131,7 +131,7 @@
                 <el-table-column type="index" label=" " width="50" />
                 <el-table-column prop="title" label="标题" width="350" />
 
-                <el-table-column prop="time" label="时间" width="200" />
+                <!-- <el-table-column prop="time" label="时间" width="200" /> -->
 
                 <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
                   <template #default="scope">
@@ -320,10 +320,10 @@ const translate = () => {
     // //console.log(res)
     const translatedInfo = res.data.trans_result[0].dst.split('@').map(item => {
       return {
-        content: item
+        content: item,
+    
       };
     });
-
     info.value = translatedInfo;
 
   });
