@@ -4,7 +4,7 @@
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
       <div class="chatFrame" v-show="true">
-        <h1 :title="titlebiaoti.value">防疫问答中心</h1>
+        <!-- <h1 :title="titlebiaoti.value">123</h1> -->
         <!-- 滚动框 -->
         <el-scrollbar class="chatContent" ref="scrollBox">
           <ul ref="chatBox" id="scrollBox">

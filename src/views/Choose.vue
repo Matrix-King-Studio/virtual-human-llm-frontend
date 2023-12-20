@@ -2,9 +2,10 @@
     <div class="main_container">
         <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
         <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-        <h1 style="height: 50px;  position: absolute;  top: 10px">请选择你要进入的页面</h1>
+        
         <div class="main">
-            <router-link to="/home">虚拟人 </router-link>
+            <h1>请选择你要进入的页面</h1>
+            <router-link to="/home">   虚拟人 </router-link>
             <router-link to="/chat">chat对话</router-link>
         </div>
 
@@ -54,6 +55,13 @@ onMounted(() => {
     align-items: center;
 }
 
+
+h1{
+        width: 100%;
+        text-align: center;
+        font-weight: 800;
+        font-size: 50px;
+}
 .main {
     display: flex;
     justify-content: space-between;
