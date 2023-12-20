@@ -53,29 +53,46 @@ onMounted(() => {
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-}
 
-
-h1{
+    h1 {
         width: 100%;
         text-align: center;
         font-weight: 800;
-        font-size: 50px;
-}
-.main {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    align-items: center;
+        font-size: 30px; /* 调整字体大小以适应移动端 */
+    }
 
-    a {
-        padding: 20px 50px;
-        margin-top: 30px;
-        border-radius: 10px;
-        color: white;
-        font-weight: 800;
-        font-size: 25px;
-        background-color: rgb(58, 52, 52);
+    .main {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+
+        a {
+            padding: 15px 30px; /* 调整内边距以适应移动端 */
+            margin-top: 15px;  /* 调整外边距以适应移动端 */
+            border-radius: 10px;
+            color: white;
+            font-weight: 800;
+            font-size: 18px; /* 调整字体大小以适应移动端 */
+            background-color: rgb(58, 52, 52);
+        }
+    }
+
+    @media only screen and (min-width: 600px) {
+        /* 在屏幕宽度大于等于600px时应用的样式 */
+        h1 {
+            font-size: 50px; /* 恢复原始字体大小 */
+        }
+
+        .main {
+            // flex-direction: row; /* 在大屏幕上改为水平方向布局 */
+            // align-items: flex-start; /* 调整对齐方式 */
+            
+            a {
+                padding: 20px 50px; /* 恢复原始内边距 */
+                margin-top: 30px; /* 恢复原始外边距 */
+            }
+        }
     }
 }
 </style>

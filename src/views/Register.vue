@@ -226,4 +226,100 @@ const register = () => {
         }
     }
 }
+
+
+
+@media only screen and (max-width: 768px) {
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .main_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+
+
+        .mian_box {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 90%;
+            height: 300px;
+            background-color: white;
+            border-radius: 10px;
+
+            .box_form {
+                margin-top: 20px;
+            }
+            .el-form-item{
+                width: 80%;
+                padding-left: 20px;
+            }
+            .el-form-item__label {
+                font-size: 17px;
+                font-weight: 700;
+            }
+
+            .box_sure {
+                margin-top: -10px;
+
+                h6 {
+                    color: grey;
+                    font-size: 12px;
+                    font-weight: 400;
+                }
+            }
+
+            .box_bottom {
+                display: flex;
+                width: 400px;
+                justify-content: space-around;
+
+                .bottom_left {
+                    font-size: 15px;
+
+                    h3 {
+                        color: rgb(30, 30, 150);
+                        font-weight: 400;
+                        cursor: pointer;
+                    }
+                }
+
+                .bottom_middle {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .el-button {
+                        border-radius: 8px;
+                        background-color: black;
+                        color: white;
+                        font-weight: 800;
+                        height: 40px;
+                    }
+                }
+
+                .bottom_right {
+                    font-size: 15px;
+
+                    h3 {
+                        color: rgb(30, 30, 150);
+                        font-weight: 400;
+                        cursor: pointer;
+                    }
+                }
+
+            }
+
+        }
+    }
+}
+
+}
+
 </style>
