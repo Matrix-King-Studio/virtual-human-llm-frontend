@@ -28,16 +28,9 @@
                     </el-checkbox>
                 </div> -->
                 <div class="box_bottom">
-                    <div class="bottom_left">
-                        <!-- 整体样式懒得写了，直接用空格代替 -->
-                        <h3>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
-                    </div>
                     <div class="bottom_middle">
                         <!-- <h5>同意以上协议并注册</h5> -->
                         <el-button @click="register">同意以上协议并注册</el-button>
-                    </div>
-                    <div class="bottom_right">
-                        <h3 @click="login" style="color: black;">开始登陆</h3>
                     </div>
                 </div>
             </div>

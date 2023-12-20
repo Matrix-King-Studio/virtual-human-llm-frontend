@@ -28,13 +28,14 @@ export function user(token) {
 }
 
 //封装保存消息日志的接口
-export function saveInfo(user_id,role,content,status,rebuid){
+export function saveInfo(user_id,role,content,status,rebuid,source){
 	return axios.post("/conversation/save/",{
 		user_id,
 		role,
 		content,
 		status,
-		rebuid
+		rebuid,
+		source
 	})
 
 }
