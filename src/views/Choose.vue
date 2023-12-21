@@ -1,8 +1,11 @@
 <template>
     <div class="main_container">
         <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
-        <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
-        
+        <!-- <img class="sign"  src="../src/assets/logo.png" /> -->
+        <div class="sign">
+            <img src="../assets/images/logo.png" alt="" style="width: 100%; height: 100%;" >
+        </div>
+       
         <div class="main">
             <h1>请选择你要进入的页面</h1>
             <router-link to="/home">   虚拟人 </router-link>
@@ -48,6 +51,13 @@ onMounted(() => {
 });
 </script>
 <style lang="less" scoped>
+
+.sign{
+  height: 5%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
 .main_container {
     display: flex;
     justify-content: space-between;
@@ -79,6 +89,13 @@ onMounted(() => {
     }
 
     @media only screen and (min-width: 600px) {
+        .sign{
+  height: 7%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
+
         /* 在屏幕宽度大于等于600px时应用的样式 */
         h1 {
             font-size: 50px; /* 恢复原始字体大小 */

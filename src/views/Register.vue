@@ -1,6 +1,6 @@
 <template >
     <div class="container">
-        <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
+        <el-image class="sign" fit="fill" src="../src/assets/logo.png" />
         <div class="main_container">
             <h2>新用户注册</h2>
             <div class="mian_box">
@@ -230,96 +230,105 @@ const register = () => {
 
 
 @media only screen and (max-width: 768px) {
-    .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .sign {
+        height: 5%;
+        position: absolute;
+        left: 10px;
+        top: 10px
+    }
 
-    .main_container {
+
+    .container {
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
 
-
-
-        .mian_box {
+        .main_container {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            width: 90%;
-            height: 300px;
-            background-color: white;
-            border-radius: 10px;
 
-            .box_form {
-                margin-top: 20px;
-            }
-            .el-form-item{
-                width: 80%;
-                padding-left: 20px;
-            }
-            .el-form-item__label {
-                font-size: 17px;
-                font-weight: 700;
-            }
 
-            .box_sure {
-                margin-top: -10px;
 
-                h6 {
-                    color: grey;
-                    font-size: 12px;
-                    font-weight: 400;
-                }
-            }
-
-            .box_bottom {
+            .mian_box {
                 display: flex;
-                width: 400px;
+                flex-direction: column;
                 justify-content: space-around;
+                align-items: center;
+                width: 90%;
+                height: 300px;
+                background-color: white;
+                border-radius: 10px;
 
-                .bottom_left {
-                    font-size: 15px;
+                .box_form {
+                    margin-top: 20px;
+                }
 
-                    h3 {
-                        color: rgb(30, 30, 150);
+                .el-form-item {
+                    width: 80%;
+                    padding-left: 20px;
+                }
+
+                .el-form-item__label {
+                    font-size: 17px;
+                    font-weight: 700;
+                }
+
+                .box_sure {
+                    margin-top: -10px;
+
+                    h6 {
+                        color: grey;
+                        font-size: 12px;
                         font-weight: 400;
-                        cursor: pointer;
                     }
                 }
 
-                .bottom_middle {
+                .box_bottom {
                     display: flex;
-                    justify-content: center;
-                    align-items: center;
+                    width: 400px;
+                    justify-content: space-around;
 
-                    .el-button {
-                        border-radius: 8px;
-                        background-color: black;
-                        color: white;
-                        font-weight: 800;
-                        height: 40px;
+                    .bottom_left {
+                        font-size: 15px;
+
+                        h3 {
+                            color: rgb(30, 30, 150);
+                            font-weight: 400;
+                            cursor: pointer;
+                        }
                     }
-                }
 
-                .bottom_right {
-                    font-size: 15px;
+                    .bottom_middle {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
 
-                    h3 {
-                        color: rgb(30, 30, 150);
-                        font-weight: 400;
-                        cursor: pointer;
+                        .el-button {
+                            border-radius: 8px;
+                            background-color: black;
+                            color: white;
+                            font-weight: 800;
+                            height: 40px;
+                        }
                     }
+
+                    .bottom_right {
+                        font-size: 15px;
+
+                        h3 {
+                            color: rgb(30, 30, 150);
+                            font-weight: 400;
+                            cursor: pointer;
+                        }
+                    }
+
                 }
 
             }
-
         }
     }
-}
 
 }
-
 </style>

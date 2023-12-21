@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
+    <el-image class="sign"  fit="fill" src="../src/assets/logo.png" />
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
       <div class="chatFrame" v-show="true">
@@ -724,7 +724,12 @@ const language = ref("chinese");
 
 <style lang="less" scoped>
 
-
+.sign{
+  height: 7%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
 
 ul {
   list-style: none;
@@ -880,7 +885,7 @@ li.user span {
 
 .el-input-group {
   width: 100% !important;
-  padding: 0 20px;
+  padding: 0 5px;
 }
 
 .el-overlay{
@@ -954,6 +959,14 @@ li.user span {
 }
 
 @media only screen and (max-width: 768px) {
+
+  
+.sign{
+  height: 5%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
   ul {
   list-style: none;
   padding: 20px 5px ; 
@@ -978,7 +991,7 @@ el-input-group {
   .box {
     display: flex;
     justify-content: center;
-    width: 155%;
+    width: 153%;
     height: 110%;
     // border: 1px solid #000;
     margin: 10px;
