@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-image class="sign"  fit="fill" src="../src/assets/logo.png" />
+    <img src="../assets/images/logo.png" alt="" class="sign">
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
       <div class="chatFrame" v-show="true">

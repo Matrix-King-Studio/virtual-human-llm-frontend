@@ -2,9 +2,7 @@
     <div class="main_container">
         <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
         <!-- <img class="sign"  src="../src/assets/logo.png" /> -->
-        <div class="sign">
-            <img src="../assets/images/logo.png" alt="" style="width: 100%; height: 100%;" >
-        </div>
+        <img src="../assets/images/logo.png" alt="" class="sign">
        
         <div class="main">
             <h1>请选择你要进入的页面</h1>

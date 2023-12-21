@@ -4,7 +4,7 @@
       style="height: 50px; position: absolute; left: 20px; top: 10px ;background-color: red; display: none; width: 20px;height: 20px;">
       0
     </div>
-    <el-image class="sign" fit="fill" src="../src/assets/logo.png" />
+    <img src="../assets/images/logo.png" alt="" class="sign">
     <el-select v-model="language" placeholder="一键翻译" id="chooseBox"
       style="width: 100px; height: 50px;   position: absolute; right: 200px; top: 10px ;" @change="change">
       <el-option label="中文" value="chinese" />

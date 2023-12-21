@@ -1,6 +1,6 @@
 <template >
     <div class="container">
-        <el-image class="sign" fit="fill" src="../src/assets/logo.png" />
+        <img src="../assets/images/logo.png" alt="" class="sign">
         <div class="main_container">
             <h2>新用户注册</h2>
             <div class="mian_box">

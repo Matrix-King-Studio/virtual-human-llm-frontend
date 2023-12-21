@@ -1,6 +1,7 @@
 <template >
   <div class="login-box">
-    <el-image class="sign"  fit="fill" src="../src/assets/logo.png" />
+    <!-- <el-image class="sign"  fit="fill" src="../src/assets/logo.png" /> -->
+    <img src="../assets/images/logo.png" alt="" class="sign">
     <h2>用户登录</h2>
     <div class="login-container">
       <el-form
