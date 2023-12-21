@@ -21,8 +21,7 @@
                   {{ item.content }}
                 </span>
               </div>
-
-              <div v-if="item.role === 'virtual_human'">
+              <div v-if="item.role === 'virtual_human'" class="optionIcon">
                 <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer"
                   @click="handleThumbUp(index)" :class="item.status === 'upvote' ? 'upvote' : null" ref="svgRef">
                   <path fill-rule="nonzero" clip-rule="evenodd"
@@ -30,7 +29,7 @@
                   </path>
                 </svg>
 
-                <svg width="15" height="20" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"
+                <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                   :class="item.status === 'downvote' ? 'downvote' : null" style="cursor: pointer; margin-left: 7px"
                   @click="handleThumbDown(index)" ref="svgRef">
                   <path fill-rule="evenodd" clip-rule="evenodd"
@@ -43,9 +42,10 @@
                     d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z"
                     fill="currentColor"></path>
                 </svg>
-                <svg t="1702787092946" style="cursor: pointer; margin-left: 7px" class="icon" 
-                  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4313" width="15"
-                  height="20" @click="abstractBoxShow(index)">
+
+                <svg t="1702787092946" style="cursor: pointer; margin-left: 7px" class="icon" viewBox="0 0 1024 1024"
+                  version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4313" width="15" height="20"
+                  @click="abstractBoxShow(index)">
                   <path
                     d="M835.770182 0l5.818182 23.179636L1024 976.174545l-22.528 5.79491L778.356364 1024l-5.818182-23.179636-181.690182-952.994909 22.528-5.79491L835.770182 0z m-586.472727 49.268364v968.936727l-21.829819 2.164364H0V49.268364h249.274182z m300.846545-0.698182l2.187636 23.901091V1018.181818l-23.970909 2.164364H302.312727V48.546909h247.808zM207.127273 91.298909H43.636364v885.573818H207.127273V91.322182z m301.614545-0.744727h-164.235636v886.318545h164.235636V90.577455zM799.441455 50.734545l-158.440728 31.162182L811.752727 973.963636l161.349818-31.883636L799.441455 50.734545zM124.974545 771.072a53.713455 53.713455 0 0 1 53.783273 53.643636 53.713455 53.713455 0 0 1-53.76 53.620364 53.713455 53.713455 0 0 1-53.806545-53.620364 53.713455 53.713455 0 0 1 53.783272-53.643636z m300.893091 0a53.713455 53.713455 0 0 1 53.76 53.643636 53.713455 53.713455 0 0 1-53.76 53.620364 53.713455 53.713455 0 0 1-53.783272-53.620364 53.713455 53.713455 0 0 1 53.76-53.643636z m396.846546-37.003636a53.899636 53.899636 0 0 1 52.829091-10.030546 53.527273 53.527273 0 1 1 17.454545 91.229091 53.899636 53.899636 0 0 1-52.829091 10.053818 53.527273 53.527273 0 1 1-17.454545-91.229091zM188.229818 300.032V330.472727h-124.276363v-30.440727h124.276363z m300.869818-1.466182v30.440727h-124.276363V298.589091h124.276363z m335.685819-46.592l5.818181 29.789091-121.809454 23.552-5.818182-29.789091 121.809455-23.552zM188.229818 181.178182v30.440727h-124.276363V181.178182h124.276363z m300.869818-0.721455v30.440728h-124.276363V180.456727h124.276363zM799.883636 139.938909l5.678546 29.858909-122.088727 23.179637-5.678546-29.85891 122.088727-23.179636z"
                     fill="#161616" p-id="4314"></path>
@@ -58,13 +58,12 @@
                     d="M270.72 594.56V436.352h-28.672v82.816c0 2.432 0.256 5.888 0.64 10.496l-53.888-93.312h-39.936v158.208h28.928v-94.72c0-1.92-0.128-4.096-0.512-6.784-0.128-0.896-0.128-2.688-0.256-5.376l61.952 106.88h31.744zM349.952 594.56h113.024v-31.232h-75.392v-34.56h59.264v-29.824h-59.264v-32.512h75.392v-30.08h-113.024zM595.328 594.56l25.088-104.704 25.984 104.704h36.48l39.68-158.208h-30.464l-22.4 96.512c-1.024 4.608-1.792 7.936-2.304 9.984l-26.624-106.496h-34.176l-25.856 106.496c-0.512-2.176-1.024-3.84-1.28-4.864-0.768-2.944-1.152-4.608-1.28-5.12l-21.76-96.512h-37.888l40.704 158.208h36.096zM861.056 562.56c-4.224 3.328-10.496 4.864-18.944 4.864-17.536 0-28.288-7.424-32.128-22.144l-34.304 7.808c3.584 14.592 11.136 25.472 22.528 32.896 11.392 7.424 25.216 11.136 41.472 11.136 21.632 0 37.888-5.248 48.896-15.616 11.008-10.496 16.512-22.784 16.512-37.12 0-9.088-2.56-17.408-7.68-24.704-5.12-7.424-11.392-12.672-18.944-16s-19.328-6.656-35.456-9.856c-9.6-1.92-15.872-4.224-18.56-6.912-2.688-2.56-4.096-5.888-4.096-9.6 0-9.472 7.296-14.208 22.016-14.208 13.696 0 22.656 6.272 27.008 18.816l31.488-10.496c-8.832-24.832-28.8-37.248-59.904-37.248-17.536 0-31.36 4.864-41.6 14.464-10.24 9.6-15.36 21.504-15.36 35.584 0 13.952 4.224 24.448 12.8 31.744 8.576 7.168 22.912 12.928 43.008 17.152 10.752 2.304 18.048 4.608 21.888 7.168 3.84 2.56 5.632 6.144 5.632 10.752-0.128 4.352-2.176 8.192-6.272 11.52zM510.464 393.856V109.568c-2.688 0.128-5.504 0.128-8.192 0.256-91.008 69.632-157.824 169.344-185.856 284.032h194.048zM278.4 637.568H119.552c45.952 147.968 172.928 260.224 329.344 284.16-83.712-73.344-144.512-172.16-170.496-284.16zM278.4 393.856c25.984-112 86.784-210.816 170.496-284.16-156.416 23.936-283.392 136.192-329.344 284.16h158.848zM744.832 393.856H903.68c-45.952-147.968-172.928-260.224-329.344-284.16 83.712 73.344 144.512 172.16 170.496 284.16zM505.344 637.568v288.64c2.688-0.128 5.504-0.128 8.32-0.256 92.416-70.784 160.128-171.904 188.544-288.512H505.344zM744.832 637.568c-25.984 112-86.784 210.816-170.496 284.16 156.416-23.936 283.392-136.192 329.344-284.16H744.832z"
                     fill="#333333" p-id="5329"></path>
                 </svg>
-
               </div>
             </li>
           </ul>
         </el-scrollbar>
-        <!-- 参考文献 -->
-        <el-drawer v-model="abstractBox" title="参考文献" :size="drawerSize" >
+        <!-- 参考信息 -->
+        <el-drawer v-model="abstractBox" title="参考信息" :size="drawerSize">
           <div>
             <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
               <el-table-column type="index" label=" " width="50" />
@@ -90,15 +89,12 @@
             </el-drawer>
           </div>
         </el-drawer>
-        <!-- 新闻 -->
-        <el-drawer v-model="newsBox" title="新闻" :size="drawerSize">
+        <!-- 相关资讯 -->
+        <el-drawer v-model="newsBox" title="相关资讯" :size="drawerSize">
           <div>
             <el-table row-key="id" :data="arrWithNews" style="width: 100%" stripe max-height="300">
               <el-table-column type="index" label=" " width="50" />
               <el-table-column prop="title" label="标题" width="200" />
-
-              <!-- <el-table-column prop="ref" label="相关网址" width="350" /> -->
-
               <el-table-column fixed="right" prop="abstract" label="摘要" width="100">
                 <template #default="scope">
                   <el-button link type="primary" size="small" @click="newsDrawer(scope.$index)">
@@ -138,13 +134,12 @@
 </template>
 <script setup>
 import { ElMessage } from "element-plus";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { removeToken } from "../composables/auth";
 import router from "../router";
 import { totast } from "../composables/util";
 import { debounce } from "lodash-es";
-import md5 from "js-md5";
 import {
   user,
   saveInfo,
@@ -162,7 +157,7 @@ function logout() {
   router.push("/login");
 }
 
-//历史文献与新闻抽屉控制开关
+//历史文献与相关资讯抽屉控制开关
 let abstractBox = ref(false);
 let newsBox = ref(false);
 
@@ -182,7 +177,7 @@ const abstractBoxShow = debounce((index) => {
   // ...
 }, 0);
 
-// 新闻开关的函数
+// 相关资讯开关的函数
 
 const newsBoxShow = debounce((index) => {
   newsBox.value = true
@@ -193,8 +188,8 @@ const newsBoxShow = debounce((index) => {
   const sourceFinal = info.value[index].source
 
   arrWithNews = sourceFinal.filter(
-        (obj) => obj.hasOwnProperty("news") && obj.news
-      );
+    (obj) => obj.hasOwnProperty("news") && obj.news
+  );
   // ...
 }, 0);
 
@@ -350,7 +345,7 @@ const repeated = debounce((index) => {
               time: element.time,
               status: element.status,
               role: element.role,
-              source:element.source
+              source: element.source
             };
           });
           info.value = historyInformation;
@@ -370,7 +365,7 @@ const abstractDrawer = (index) => {
   abstracter.value = true;
 
 }
-//新闻
+//相关资讯
 const newsDrawer = (index) => {
   selectedIndex = index;
   newser.value = true;
@@ -448,7 +443,7 @@ onMounted(() => {
       console.error(error);
     });
 
-    handleResize()
+  handleResize()
 });
 
 const setMouthOpenY = (v) => {
@@ -484,6 +479,7 @@ const msg = ref(""); //输入内容
 const okToSend = ref(true);
 
 const isInputDisabled = ref(false);
+
 function sendmsg() {
   isInputDisabled.value = true;
   setTimeout(() => {
@@ -555,6 +551,7 @@ const info = ref([]);
 const info1 = ref([]);
 
 let finalSource;
+
 // 进行分割的函数
 function ruleSplitString(string, length = 25) {
   // 根据中文分割标点符号进行分割
@@ -679,7 +676,7 @@ function chatWithAi({ content }) {
               time: element.time,
               status: element.status,
               role: element.role,
-              source:element.source
+              source: element.source
             };
           });
           info.value = historyInformation;
@@ -723,17 +720,16 @@ const language = ref("chinese");
 </script>
 
 <style lang="less" scoped>
-
-.sign{
-  height: 7%; 
-  position: absolute; 
+.sign {
+  height: 7%;
+  position: absolute;
   left: 10px;
   top: 10px
 }
 
 ul {
   list-style: none;
-  padding: 20px;
+  padding: 20px  0;
   margin: 0;
   font-size: 14px;
   line-height: 20px;
@@ -885,15 +881,14 @@ li.user span {
 
 .el-input-group {
   width: 100% !important;
-  padding: 0 5px;
+  // padding: 0 5px;
 }
 
-.el-overlay{
-  div{
+.el-overlay {
+  div {
     width: 100% !important;
   }
 }
-
 
 
 .main {
@@ -903,7 +898,7 @@ li.user span {
   align-items: center;
   height: 100%;
   width: 100%;
-  
+
   .box {
     display: flex;
     justify-content: center;
@@ -960,92 +955,99 @@ li.user span {
 
 @media only screen and (max-width: 768px) {
 
-  
-.sign{
-  height: 5%; 
-  position: absolute; 
-  left: 10px;
-  top: 10px
-}
+
+  .sign {
+    height: 5%;
+    position: absolute;
+    left: 10px;
+    top: 10px
+  }
+
   ul {
-  list-style: none;
-  padding: 20px 5px ; 
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-}
-el-input-group {
-  width: 100% !important;
-  padding: 0 5px;
-}
+    list-style: none;
+    padding: 20px 5px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  el-input-group {
+    width: 100% !important;
+    padding: 0 5px;
+  }
 
 
   .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-
-  .box {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     width: 153%;
     height: 110%;
     // border: 1px solid #000;
     margin: 10px;
 
-
-    .sendBox {
-      height: 10%;
-      width: 100%;
-      margin-top: 10px;
-      border-radius: 10px;
+    .box {
       display: flex;
       justify-content: center;
-      --el-border-radius-base: 10px !important;
-    }
+      width: 155%;
+      height: 110%;
+      // border: 1px solid #000;
+      margin: 10px;
 
-    .chatFrame {
-      margin: 10px  0px;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
 
-      h1 {
-        color: blue;
-        font-size: 40px;
+      .sendBox {
+        height: 10%;
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        --el-border-radius-base: 10px !important;
       }
 
-      .chatContent {
-        // background: #ffffff45;
-        // box-shadow: 1px 50px 99px 1px #9fb3f540;
-        border-radius: 20px;
-        width: 100%;
+      .chatFrame {
+        margin: 10px 0px;
         height: 100%;
-        margin: 5px;
-        position: relative;
-        // overflow: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
 
-        // overflow-x: hidden;
-        .overNone {
-          // max-width: 120px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        h1 {
+          color: blue;
+          font-size: 40px;
         }
+
+        .chatContent {
+          // background: #ffffff45;
+          // box-shadow: 1px 50px 99px 1px #9fb3f540;
+          border-radius: 20px;
+          width: 100%;
+          height: 100%;
+          margin: 5px;
+          position: relative;
+          // overflow: auto;
+
+          // overflow-x: hidden;
+          .overNone {
+            // max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+
+  .sendBox div {
+    padding: 0;
   }
 }
+
+.optionIcon {
+  display: flex;
+  justify-content: flex-end;
 }
-
-  }
-
-}
-
-
-
 </style>
