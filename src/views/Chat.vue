@@ -30,20 +30,20 @@
                   </path>
                 </svg>
 
-                <svg width="15" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                <svg width="15" height="20" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg"
                   :class="item.status === 'downvote' ? 'downvote' : null" style="cursor: pointer; margin-left: 7px"
                   @click="handleThumbDown(index)" ref="svgRef">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M11.8727 21.4961C11.6725 21.8466 11.2811 22.0423 10.8805 21.9922L10.4267 21.9355C7.95958 21.6271 6.36855 19.1665 7.09975 16.7901L7.65054 15H6.93226C4.29476 15 2.37923 12.4921 3.0732 9.94753L4.43684 4.94753C4.91145 3.20728 6.49209 2 8.29589 2H18.0045C19.6614 2 21.0045 3.34315 21.0045 5V12C21.0045 13.6569 19.6614 15 18.0045 15H16.0045C15.745 15 15.5054 15.1391 15.3766 15.3644L11.8727 21.4961ZM14.0045 4H8.29589C7.39399 4 6.60367 4.60364 6.36637 5.47376L5.00273 10.4738C4.65574 11.746 5.61351 13 6.93226 13H9.00451C9.32185 13 9.62036 13.1506 9.8089 13.4059C9.99743 13.6612 10.0536 13.9908 9.96028 14.2941L9.01131 17.3782C8.6661 18.5002 9.35608 19.6596 10.4726 19.9153L13.6401 14.3721C13.9523 13.8258 14.4376 13.4141 15.0045 13.1902V5C15.0045 4.44772 14.5568 4 14.0045 4ZM17.0045 13V5C17.0045 4.64937 16.9444 4.31278 16.8338 4H18.0045C18.5568 4 19.0045 4.44772 19.0045 5V12C19.0045 12.5523 18.5568 13 18.0045 13H17.0045Z"
                     fill="currentColor"></path>
                 </svg>
-                <svg width="15" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                   style="cursor: pointer; margin-left: 7px" @click="repeated(index - 1)" ref="svgRef">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z"
                     fill="currentColor"></path>
                 </svg>
-                <svg t="1702787092946" style="cursor: pointer; margin-left: 7px" class="icon" fill="none"
+                <svg t="1702787092946" style="cursor: pointer; margin-left: 7px" class="icon" 
                   viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4313" width="15"
                   height="20" @click="abstractBoxShow(index)">
                   <path
@@ -64,7 +64,7 @@
           </ul>
         </el-scrollbar>
         <!-- 参考文献 -->
-        <el-drawer v-model="abstractBox" title="参考文献" size="35%">
+        <el-drawer v-model="abstractBox" title="参考文献" :size="drawerSize" >
           <div>
             <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
               <el-table-column type="index" label=" " width="50" />
@@ -91,7 +91,7 @@
           </div>
         </el-drawer>
         <!-- 新闻 -->
-        <el-drawer v-model="newsBox" title="新闻" size="35%">
+        <el-drawer v-model="newsBox" title="新闻" :size="drawerSize">
           <div>
             <el-table row-key="id" :data="arrWithNews" style="width: 100%" stripe max-height="300">
               <el-table-column type="index" label=" " width="50" />
@@ -170,10 +170,10 @@ let newsBox = ref(false);
 // 历史文献的开关的函数
 const abstractBoxShow = debounce((index) => {
   abstractBox.value = true
-  // console.log(abstractBox)
-  ////console.log(index)
+  // //console.log(abstractBox)
+  //////console.log(index)
   // const itemId = itemTimeRef.value[index]?.getAttribute("title");
-  console.log(info.value[index].source)
+  //console.log(info.value[index].source)
   const sourceFinal = info.value[index].source
 
   arrWithoutNews = sourceFinal.filter(
@@ -186,10 +186,10 @@ const abstractBoxShow = debounce((index) => {
 
 const newsBoxShow = debounce((index) => {
   newsBox.value = true
-  // console.log(abstractBox)
-  ////console.log(index)
+  // //console.log(abstractBox)
+  //////console.log(index)
   // const itemId = itemTimeRef.value[index]?.getAttribute("title");
-  console.log(info.value[index].source)
+  //console.log(info.value[index].source)
   const sourceFinal = info.value[index].source
 
   arrWithNews = sourceFinal.filter(
@@ -209,7 +209,7 @@ const svg_color = ref("icon-mdb");
 let updatecontent;
 // 调用点赞的函数
 const handleThumbUp = debounce((index) => {
-  ////console.log(index)
+  //////console.log(index)
   const itemId = itemTimeRef.value[index]?.getAttribute("id");
   // svgRef.value.setAttribute('display', "none")
   svgRef.value[((index - 1) / 2) * 3]?.setAttribute("class", "upvote");
@@ -226,7 +226,7 @@ const handleThumbUp = debounce((index) => {
     days = 1;
     // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
     historyInfo(user_id, days).then((res) => {
-      // //console.log(res.data)
+      // ////console.log(res.data)
       const historyInformation = res.data.map((element) => {
         return {
           content: element.content,
@@ -237,7 +237,7 @@ const handleThumbUp = debounce((index) => {
         };
       });
       info.value = historyInformation;
-      //console.log(info.value)
+      ////console.log(info.value)
     });
   });
   // ...
@@ -245,31 +245,31 @@ const handleThumbUp = debounce((index) => {
 
 // 点踩函数的设置
 const handleThumbDown = debounce((index) => {
-  //console.log(index)
-  //console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+  ////console.log(index)
+  ////console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
   const itemId = itemTimeRef.value[index]?.getAttribute("id");
-  //console.log(itemTimeRef.value[index])
+  ////console.log(itemTimeRef.value[index])
   svgRef.value[((index - 1) / 2) * 3]?.setAttribute("class", "null");
   svgRef.value[((index - 1) / 2) * 3 + 1]?.setAttribute("class", "downvote");
   svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute("class", "null");
   const status = "downvote";
   update(user_id, status, itemId).then((res) => {
-    ////console.log(res)
+    //////console.log(res)
     totast("点踩成功", "success");
   });
-  //console.log(itemTimeRef.value[index])
+  ////console.log(itemTimeRef.value[index])
   const token = getToken();
   // 调用获取用户消息的接口，同时对用户历史消息进行渲染，使用点踩可以进行运行
   user(token)
     .then((response) => {
-      ////console.log(response);
+      //////console.log(response);
       user_id = response.pk;
       days = 1;
-      ////console.log(response.pk);
+      //////console.log(response.pk);
 
       // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
       historyInfo(user_id, days).then((res) => {
-        // //console.log(res.data)
+        // ////console.log(res.data)
         const historyInformation = res.data.map((element) => {
           return {
             content: element.content,
@@ -280,7 +280,7 @@ const handleThumbDown = debounce((index) => {
           };
         });
         info.value = historyInformation;
-        //console.log(info.value)
+        ////console.log(info.value)
       });
     })
     .catch((error) => {
@@ -292,7 +292,7 @@ const handleThumbDown = debounce((index) => {
 const repeated = debounce((index) => {
   // 获取问题
   const content = itemTimeRef.value[index]?.getAttribute("title");
-  // //console.log(centent)
+  // ////console.log(centent)
   // 获取下方回答框的id值
   const itemId = itemTimeRef.value[index + 1]?.getAttribute("id");
   const messages = {
@@ -315,8 +315,8 @@ const repeated = debounce((index) => {
     url: "/search_web",
     data: messages,
   }).then((response) => {
-    // console.log("$$$$$$")
-    // console.log(response)
+    // //console.log("$$$$$$")
+    // //console.log(response)
     const { data } = response;
     const { result } = data;
     titlebiaoti.value = result;
@@ -336,14 +336,14 @@ const repeated = debounce((index) => {
     // 调用获取用户消息的接口，同时对用户历史消息进行渲染，使用点踩可以进行运行
     user(token)
       .then((response) => {
-        ////console.log(response);
+        //////console.log(response);
         user_id = response.pk;
         days = 1;
-        ////console.log(response.pk);
+        //////console.log(response.pk);
 
         // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
         historyInfo(user_id, days).then((res) => {
-          // //console.log(res.data)
+          // ////console.log(res.data)
           const historyInformation = res.data.map((element) => {
             return {
               content: element.content,
@@ -354,7 +354,7 @@ const repeated = debounce((index) => {
             };
           });
           info.value = historyInformation;
-          //console.log(info.value)
+          ////console.log(info.value)
         });
       })
       .catch((error) => {
@@ -386,8 +386,8 @@ const repeatanswer = (index) => {
   svgRef.value[((index - 1) / 2) * 3 + 2]?.setAttribute("class", "null");
 
   itemTimeRef.value[index].innerHTML = titlebiaoti.value;
-  //console.log(itemTimeRef.value[index])
-  //console.log("@@@@@@@@@@@@")
+  ////console.log(itemTimeRef.value[index])
+  ////console.log("@@@@@@@@@@@@")
 };
 
 //查询历史文献
@@ -400,19 +400,27 @@ let rebuild;
 let days;
 
 let model2;
+
+
+const drawerSize = ref("35%");
+
+const handleResize = () => {
+  drawerSize.value = window.innerWidth <= 768 ? "100%" : "35%";
+};
+
 onMounted(() => {
   const token = getToken();
   // 读取用户信息
   user(token)
     .then((response) => {
-      ////console.log(response);
+      //////console.log(response);
       user_id = response.pk;
       days = 1;
-      ////console.log(response.pk);
+      //////console.log(response.pk);
 
       // 在此基础上进行调用历史记录的接口
       historyInfo(user_id, days).then((res) => {
-        console.log(res.data)
+        //console.log(res.data)
         const historyInformation = res.data.map((element) => {
           return {
             content: element.content,
@@ -429,8 +437,8 @@ onMounted(() => {
         });
 
         info.value = historyInformation;
-        console.log("&&&&&^^^^^")
-        console.log(historySource)
+        //console.log("&&&&&^^^^^")
+        //console.log(historySource)
         setTimeout(() => {
           scrollToBottom();
         });
@@ -439,6 +447,8 @@ onMounted(() => {
     .catch((error) => {
       console.error(error);
     });
+
+    handleResize()
 });
 
 const setMouthOpenY = (v) => {
@@ -484,13 +494,13 @@ function sendmsg() {
 const sendMsg = debounce(() => {
   var audioMessage = document.getElementById("result").value;
   msg.value = audioMessage;
-  ////console.log(visiable.value)
-  // ////console.log("不能发送性能消息")
+  //////console.log(visiable.value)
+  // //////console.log("不能发送性能消息")
   if (msg.value.length < 1) {
     isInputDisabled.value = false;
     return ElMessage({ message: "不能发送空消息！", type: "error" });
   }
-  // ////console.log(okToSend.value, "@@@@@@@@@@@@@@@");
+  // //////console.log(okToSend.value, "@@@@@@@@@@@@@@@");
   // okToSend.value =false;
   if (okToSend.value == false) {
     return ElMessage({
@@ -501,7 +511,7 @@ const sendMsg = debounce(() => {
   const content = msg.value;
   // 调用保存日志的接口
   saveContent = msg.value;
-  ////console.log(saveContent);
+  //////console.log(saveContent);
   msg.value = ""; //清空输入框
   document.getElementById("result").value = "";
   role = "user";
@@ -510,15 +520,15 @@ const sendMsg = debounce(() => {
   saveContent = content;
   role = "user";
   saveStatus = null;
-  ////console.log(user_id)
-  ////console.log(role)
-  ////console.log(content)
+  //////console.log(user_id)
+  //////console.log(role)
+  //////console.log(content)
   // 保存日志接口的调用
 
   saveInfo(user_id, role, saveContent, saveStatus, rebuild)
     // 保存日志接口成功之后执行的回调
     .then((res) => {
-      ////console.log(res)
+      //////console.log(res)
     })
     .catch((err) => {
       // 失败之后执行的回调
@@ -600,7 +610,7 @@ function chatWithAi({ content }) {
       },
     ],
   };
-  ////console.log(messages);
+  //////console.log(messages);
   const textwaitting = "正在为您查询中...";
 
   subtitleRef.value = textwaitting;
@@ -616,15 +626,15 @@ function chatWithAi({ content }) {
       ////////成功之后执行下方的回调
       const { data } = response;
       const { status, result, source, history } = data;
-      console.log(source)
+      //console.log(source)
       // arrWithNews = source.filter(
       //   (obj) => obj.hasOwnProperty("news") && obj.news
       // );
       // arrWithoutNews = source.filter(
       //   (obj) => !obj.hasOwnProperty("news") || !obj.news
       // );
-      console.log(arrWithNews)
-      console.log(arrWithoutNews)
+      //console.log(arrWithNews)
+      //console.log(arrWithoutNews)
       finalSource = source;
 
       // if (status != 200) {
@@ -646,12 +656,12 @@ function chatWithAi({ content }) {
       saveContent = response.data.result;
       saveStatus = null;
       rebuild = false;
-      console.log(source)
+      //console.log(source)
       // 保存日志接口的调用
       saveInfo(user_id, role, saveContent, saveStatus, rebuild, source)
         // 保存日志接口成功之后执行的回调
         .then((res) => {
-          console.log(res)
+          //console.log(res)
         })
         .catch((err) => {
           // 失败之后执行的回调
@@ -662,7 +672,7 @@ function chatWithAi({ content }) {
         days = 1;
         // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
         historyInfo(user_id, days).then((res) => {
-          console.log(res.data)
+          //console.log(res.data)
           const historyInformation = res.data.map((element) => {
             return {
               content: element.content,
@@ -673,7 +683,7 @@ function chatWithAi({ content }) {
             };
           });
           info.value = historyInformation;
-          //console.log(info.value)
+          ////console.log(info.value)
         });
       });
 
@@ -683,7 +693,7 @@ function chatWithAi({ content }) {
 
       isInputDisabled.value = false;
       okToSend.value = true;
-      //console.log(okToSend.value)
+      ////console.log(okToSend.value)
     })
     .catch((err) => {
       totast("聊天服务端错误", "error");
@@ -701,7 +711,7 @@ let time;
 //设置滚动到底部的函数
 function scrollToBottom() {
   const container = document.querySelector("#scrollBox");
-  ////console.log(container, '************')
+  //////console.log(container, '************')
   const lastMessage = container.lastElementChild;
   if (lastMessage) {
     lastMessage.scrollIntoView({ behavior: "smooth" });
@@ -713,6 +723,9 @@ const language = ref("chinese");
 </script>
 
 <style lang="less" scoped>
+
+
+
 ul {
   list-style: none;
   padding: 20px;
@@ -870,6 +883,14 @@ li.user span {
   padding: 0 20px;
 }
 
+.el-overlay{
+  div{
+    width: 100% !important;
+  }
+}
+
+
+
 .main {
   display: flex;
   flex-direction: column;
@@ -877,7 +898,7 @@ li.user span {
   align-items: center;
   height: 100%;
   width: 100%;
-
+  
   .box {
     display: flex;
     justify-content: center;
@@ -929,7 +950,89 @@ li.user span {
         }
       }
     }
-
   }
 }
+
+@media only screen and (max-width: 768px) {
+  ul {
+  list-style: none;
+  padding: 20px 5px ; 
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+el-input-group {
+  width: 100% !important;
+  padding: 0 5px;
+}
+
+
+  .main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+
+  .box {
+    display: flex;
+    justify-content: center;
+    width: 155%;
+    height: 110%;
+    // border: 1px solid #000;
+    margin: 10px;
+
+
+    .sendBox {
+      height: 10%;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      --el-border-radius-base: 10px !important;
+    }
+
+    .chatFrame {
+      margin: 10px  0px;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+
+      h1 {
+        color: blue;
+        font-size: 40px;
+      }
+
+      .chatContent {
+        // background: #ffffff45;
+        // box-shadow: 1px 50px 99px 1px #9fb3f540;
+        border-radius: 20px;
+        width: 100%;
+        height: 100%;
+        margin: 5px;
+        position: relative;
+        // overflow: auto;
+
+        // overflow-x: hidden;
+        .overNone {
+          // max-width: 120px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+  }
+}
+}
+
+  }
+
+}
+
+
+
 </style>
