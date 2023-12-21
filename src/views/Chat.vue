@@ -954,7 +954,17 @@ li.user span {
 }
 
 @media only screen and (max-width: 768px) {
-
+  ul {
+  list-style: none;
+  padding: 20px 5px ; 
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+el-input-group {
+  width: 100% !important;
+  padding: 0 5px;
+}
 
 
   .main {
@@ -968,12 +978,59 @@ li.user span {
   .box {
     display: flex;
     justify-content: center;
-    width: 150%;
+    width: 155%;
     height: 110%;
     // border: 1px solid #000;
     margin: 10px;
+
+
+    .sendBox {
+      height: 10%;
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      --el-border-radius-base: 10px !important;
+    }
+
+    .chatFrame {
+      margin: 10px  0px;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+
+      h1 {
+        color: blue;
+        font-size: 40px;
+      }
+
+      .chatContent {
+        // background: #ffffff45;
+        // box-shadow: 1px 50px 99px 1px #9fb3f540;
+        border-radius: 20px;
+        width: 100%;
+        height: 100%;
+        margin: 5px;
+        position: relative;
+        // overflow: auto;
+
+        // overflow-x: hidden;
+        .overNone {
+          // max-width: 120px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
   }
 }
+}
+
+  }
+
 }
 
 
