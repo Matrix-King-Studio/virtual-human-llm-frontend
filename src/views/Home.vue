@@ -4,7 +4,7 @@
       style="height: 50px; position: absolute; left: 20px; top: 10px ;background-color: red; display: none; width: 20px;height: 20px;">
       0
     </div>
-    <el-image style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill" src="../src/assets/logo.png" />
+    <img src="../assets/images/logo.png" alt="" class="sign">
     <el-select v-model="language" placeholder="一键翻译" id="chooseBox"
       style="width: 100px; height: 50px;   position: absolute; right: 200px; top: 10px ;" @change="change">
       <el-option label="中文" value="chinese" />
@@ -824,6 +824,15 @@ document.body.appendChild(scriptElement3);
 </script>
 
 <style lang="less" scoped>
+
+.sign{
+  height: 7%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
+
+
 ul {
   list-style: none;
   padding: 20px;
@@ -1134,4 +1143,17 @@ li+li {
       }
     }
   }
-}</style>
+}
+
+@media only screen and (max-width: 768px) {
+
+.sign{
+  height: 5%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
+}
+
+
+</style>

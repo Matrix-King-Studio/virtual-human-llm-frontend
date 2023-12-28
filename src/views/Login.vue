@@ -1,8 +1,7 @@
 <template >
   <div class="login-box">
-    <el-image
-      style="height: 50px; position: absolute; left: 10px; top: 10px" fit="fill"
-      src="../src/assets/logo.png"/>
+    <!-- <el-image class="sign"  fit="fill" src="../src/assets/logo.png" /> -->
+    <img src="../assets/images/logo.png" alt="" class="sign">
     <h2>用户登录</h2>
     <div class="login-container">
       <el-form
@@ -99,6 +98,14 @@ formRef.value.validate((valid)=>{
 
 </script>
 <style lang="less">
+  .sign{
+  height: 7%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
+
+
   .login-box {
     width: 488px;
     height: 482px;
@@ -144,4 +151,15 @@ formRef.value.validate((valid)=>{
       }
     }
   }
+
+
+  @media only screen and (max-width: 768px) {
+
+.sign{
+  height: 5%; 
+  position: absolute; 
+  left: 10px;
+  top: 10px
+}
+}
 </style>
