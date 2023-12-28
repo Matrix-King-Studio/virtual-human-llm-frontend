@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <img src="../assets/images/logo.png" alt="" class="sign">
+    <el-button @click="deletecontent" style="position: absolute; right: 100px; top: 10px">清空对话</el-button>
     <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
     <div class="box">
       <div class="chatFrame" v-show="true">
@@ -146,6 +147,7 @@ import {
   historyInfo,
   update,
   updateContent,
+  deleteContent
 } from "../utils/api";
 import { getToken } from "../composables/auth";
 import { getColumnByCell } from "element-plus/es/components/table/src/util";
@@ -156,6 +158,30 @@ function logout() {
   totast("退出成功", "success");
   router.push("/login");
 }
+
+function deletecontent() {
+  const token = getToken();
+  user(token).then((response) => {
+    user_id = response.pk;
+    //days = 1;
+    console.log(user_id)
+    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+    deleteContent(user_id).then((res) => {
+      // console.log(res)
+      info.value = [];
+      // window.location.reload();
+      totast("清空对话成功", 'success')
+
+
+    });
+    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+
+
+  });
+}
+
+
+
 
 //历史文献与相关资讯抽屉控制开关
 let abstractBox = ref(false);
@@ -218,7 +244,7 @@ const handleThumbUp = debounce((index) => {
   const token = getToken();
   user(token).then((response) => {
     user_id = response.pk;
-    days = 1;
+    //days = 1;
     // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
     historyInfo(user_id, days).then((res) => {
       // ////console.log(res.data)
@@ -259,7 +285,7 @@ const handleThumbDown = debounce((index) => {
     .then((response) => {
       //////console.log(response);
       user_id = response.pk;
-      days = 1;
+      //days = 1;
       //////console.log(response.pk);
 
       // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
@@ -333,7 +359,7 @@ const repeated = debounce((index) => {
       .then((response) => {
         //////console.log(response);
         user_id = response.pk;
-        days = 1;
+        //days = 1;
         //////console.log(response.pk);
 
         // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
@@ -392,7 +418,7 @@ let saveStatus;
 let role;
 let saveContent;
 let rebuild;
-let days;
+let days = 1;
 
 let model2;
 
@@ -410,7 +436,9 @@ onMounted(() => {
     .then((response) => {
       //////console.log(response);
       user_id = response.pk;
-      days = 1;
+      console.log(info.value)
+      console.log("######")
+      //days = 1;
       //////console.log(response.pk);
 
       // 在此基础上进行调用历史记录的接口
@@ -666,7 +694,7 @@ function chatWithAi({ content }) {
       const token = getToken();
       user(token).then((response) => {
         user_id = response.pk;
-        days = 1;
+        //days = 1;
         // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
         historyInfo(user_id, days).then((res) => {
           //console.log(res.data)
@@ -729,7 +757,7 @@ const language = ref("chinese");
 
 ul {
   list-style: none;
-  padding: 20px  0;
+  padding: 20px 0;
   margin: 0;
   font-size: 14px;
   line-height: 20px;

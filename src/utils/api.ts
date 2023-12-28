@@ -66,3 +66,9 @@ export function updateContent(user_id,status, content,time){
 		time
 	})
 }
+
+export function deleteContent(user_id) {
+	return axios.post("/conversation/delete/", {
+		user_id,
+	})
+}
