@@ -159,25 +159,23 @@ function logout() {
   router.push("/login");
 }
 
+// 定义清空聊天记录对话的功能
 function deletecontent() {
-  const token = getToken();
-  user(token).then((response) => {
-    user_id = response.pk;
-    //days = 1;
-    console.log(user_id)
-    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
-    deleteContent(user_id).then((res) => {
-      // console.log(res)
-      info.value = [];
-      // window.location.reload();
-      totast("清空对话成功", 'success')
-
-
+    const token = getToken();
+    user(token).then((response) => {
+        user_id = response.pk;
+        // 使用函数进行遍历
+        for (let i = 0; i < info.value.length; i++) {
+            time = info.value[i].time
+            // 每一轮循环都要调用删除的这个函数的接口
+            deleteContent(user_id, time).then((res) => {
+                // console.log(res)
+                info.value = [];
+                // window.location.reload()
+            });
+        }
     });
-    // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
-
-
-  });
+    totast("清空对话成功", 'success')
 }
 
 
