@@ -6,6 +6,10 @@ import {totast} from "../composables/util"
 
 const routes = [
     {
+        path: '/vip_chat',
+        component: () => import('../views/TestChat.vue'),  // 路由的组件
+    },
+    {
         path: '/',
         component: () => import('../views/Choose.vue'),  // 路由的组件
     },
@@ -41,7 +45,7 @@ router.beforeEach((to, from, next) => {
     const token = getToken();
     console.log("获取Token：", token);
     // 没有登陆强制跳转回登录页面
-    if (!token && to.path != "/login" && to.path != "/register") {
+    if (!token && to.path != "/login" && to.path != "/register" && to.path !="/vip_chat") {
         totast('请先登录！！', "error")
         return next({path: "/login"})
     }

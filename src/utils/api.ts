@@ -66,9 +66,10 @@ export function updateContent(user_id,status, content,time){
 		time
 	})
 }
-
-export function deleteContent(user_id) {
+// 定义清空聊天记录的接口
+export function deleteContent(user_id,time) {
 	return axios.post("/conversation/delete/", {
 		user_id,
+		time
 	})
 }
