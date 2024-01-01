@@ -3,15 +3,11 @@
         <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
         <!-- <img class="sign"  src="../src/assets/logo.png" /> -->
         <img src="../assets/images/logo.png" alt="" class="sign">
-       
         <div class="main">
             <h1>请选择你要进入的页面</h1>
             <router-link to="/home">   虚拟人 </router-link>
             <router-link to="/chat">chat对话</router-link>
         </div>
-
-
-
     </div>
 </template>
 
@@ -51,8 +47,8 @@ onMounted(() => {
 <style lang="less" scoped>
 
 .sign{
-  height: 5%; 
-  position: absolute; 
+  height: 5%;
+  position: absolute;
   left: 10px;
   top: 10px
 }
@@ -88,8 +84,8 @@ onMounted(() => {
 
     @media only screen and (min-width: 600px) {
         .sign{
-  height: 7%; 
-  position: absolute; 
+  height: 7%;
+  position: absolute;
   left: 10px;
   top: 10px
 }
@@ -102,7 +98,7 @@ onMounted(() => {
         .main {
             // flex-direction: row; /* 在大屏幕上改为水平方向布局 */
             // align-items: flex-start; /* 调整对齐方式 */
-            
+
             a {
                 padding: 20px 50px; /* 恢复原始内边距 */
                 margin-top: 30px; /* 恢复原始外边距 */
