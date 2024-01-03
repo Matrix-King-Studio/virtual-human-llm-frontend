@@ -2,7 +2,7 @@
     <div class="main">
         <img src="../assets/images/logo.png" alt="" class="sign">
         <!-- <el-button @click="deletecontent" style="position: absolute; right: 100px; top: 10px">清空对话</el-button> -->
-        <el-button @click="deletecontent" style="position: absolute; right: 10px; top: 10px">清空对话</el-button>
+        <el-button @click="deletecontent" :disabled="isInputDisabled" style="position: absolute; right: 10px; top: 10px">清空对话</el-button>
         <div class="box">
             <div class="chatFrame" v-show="true">
                 <!-- <h1 :title="titlebiaoti.value">123</h1> -->
@@ -177,7 +177,6 @@ onMounted(async () => {
 
     try {
         const registrationResponse = await registration(userID, "2889015731@qq.com", "123456", "123456");
-        console.log(userID + "OOOOOO");
 
         const signResponse = await sign(userID, "123456");
         totast("登陆成功！！欢迎！！", "success");
@@ -394,12 +393,24 @@ const repeated = debounce((index) => {
     const textwaitting = "正在为您查询中...";
     itemTimeRef.value[index + 1].innerHTML = textwaitting;
     // 调用南开的值，进行重新查询
+    // axios({
+    //     method: "post",
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    //     url: "/search_web",
+    //     data: messages,
+    // }).then((response) => {
     axios({
         method: "post",
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
         },
-        url: "/search_web",
+        url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
+        params: {
+            access_token,
+        },
         data: messages,
     }).then((response) => {
         // //console.log("$$$$$$")
@@ -646,6 +657,36 @@ let splitResult;
 let arrWithNews;
 let arrWithoutNews;
 
+// function getAccessToken() {
+//   try {
+//     const token = JSON.parse(localStorage.getItem('token'));
+//     const {access_token} = token;
+//     return access_token;
+//   } catch (error) {
+//     axios({
+//       method: 'post',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       url: '/baidubce/oauth/2.0/token',
+//       params: {
+//         grant_type: 'client_credentials',
+//         client_id: 'rG08BZZ7TfDqLQjkjyo9qqq1',
+//         client_secret: '3xXms40qc5WRG2RoQkagrCb18mFQTQtf',
+//       },
+//     }).then(response => {
+//       const {data} = response;
+//       localStorage.setItem('token', JSON.stringify(data));
+//       const token = JSON.parse(localStorage.getItem('token'));
+//       const {access_token} = token;
+//       return access_token;
+//     });
+//   }
+//   const token = JSON.parse(localStorage.getItem('token'));
+//   const {access_token} = token;
+//   return access_token;
+// }
+
 // 调用南开虚拟人的回答问题的接口
 function chatWithAi({ content }) {
     okToSend.value = false;
@@ -670,78 +711,91 @@ function chatWithAi({ content }) {
         data: messages,
     })
         .then((response) => {
-            ////////成功之后执行下方的回调
-            const { data } = response;
-            const { status, result, source, history } = data;
-            //console.log(source)
-            // arrWithNews = source.filter(
-            //   (obj) => obj.hasOwnProperty("news") && obj.news
-            // );
-            // arrWithoutNews = source.filter(
-            //   (obj) => !obj.hasOwnProperty("news") || !obj.news
-            // );
-            //console.log(arrWithNews)
-            //console.log(arrWithoutNews)
-            finalSource = source;
+    // const access_token = getAccessToken();
+    // axios({
+    //     method: "post",
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json',
+    //     },
+    //     url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
+    //     params: {
+    //         access_token,
+    //     },
+    //     data: messages,
+    // }).then((response) => {
+        ////////成功之后执行下方的回调
+        const { data } = response;
+        const { status, result, source, history } = data;
+        //console.log(source)
+        // arrWithNews = source.filter(
+        //   (obj) => obj.hasOwnProperty("news") && obj.news
+        // );
+        // arrWithoutNews = source.filter(
+        //   (obj) => !obj.hasOwnProperty("news") || !obj.news
+        // );
+        //console.log(arrWithNews)
+        //console.log(arrWithoutNews)
+        finalSource = source;
 
-            // if (status != 200) {
-            //   ElMessage({message: result, type: "error"});
-            // }
+        // if (status != 200) {
+        //   ElMessage({message: result, type: "error"});
+        // }
 
-            splitResult = ruleSplitString(result);
-            splitResult = splitResult.filter(function (element) {
-                return element.trim() !== "";
+        splitResult = ruleSplitString(result);
+        splitResult = splitResult.filter(function (element) {
+            return element.trim() !== "";
+        });
+
+        info.value.push({
+            content: result,
+            role: "virtual_human",
+        });
+
+        // 对保存日志接口的调用，传入的参数值进行的匹配
+        role = "virtual_human";
+        saveContent = response.data.result;
+        saveStatus = null;
+        rebuild = false;
+        //console.log(source)
+        // 保存日志接口的调用
+        saveInfo(user_id, role, saveContent, saveStatus, rebuild, source)
+            // 保存日志接口成功之后执行的回调
+            .then((res) => {
+                //console.log(res)
+            })
+            .catch((err) => {
+                // 失败之后执行的回调
             });
-
-            info.value.push({
-                content: result,
-                role: "virtual_human",
-            });
-
-            // 对保存日志接口的调用，传入的参数值进行的匹配
-            role = "virtual_human";
-            saveContent = response.data.result;
-            saveStatus = null;
-            rebuild = false;
-            //console.log(source)
-            // 保存日志接口的调用
-            saveInfo(user_id, role, saveContent, saveStatus, rebuild, source)
-                // 保存日志接口成功之后执行的回调
-                .then((res) => {
-                    //console.log(res)
-                })
-                .catch((err) => {
-                    // 失败之后执行的回调
+        const token = getToken();
+        user(token).then((response) => {
+            user_id = response.pk;
+            //days = 1;
+            // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+            historyInfo(user_id, days).then((res) => {
+                //console.log(res.data)
+                const historyInformation = res.data.map((element) => {
+                    return {
+                        content: element.content,
+                        time: element.time,
+                        status: element.status,
+                        role: element.role,
+                        source: element.source
+                    };
                 });
-            const token = getToken();
-            user(token).then((response) => {
-                user_id = response.pk;
-                //days = 1;
-                // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
-                historyInfo(user_id, days).then((res) => {
-                    //console.log(res.data)
-                    const historyInformation = res.data.map((element) => {
-                        return {
-                            content: element.content,
-                            time: element.time,
-                            status: element.status,
-                            role: element.role,
-                            source: element.source
-                        };
-                    });
-                    info.value = historyInformation;
-                    ////console.log(info.value)
-                });
+                info.value = historyInformation;
+                ////console.log(info.value)
             });
+        });
 
-            setTimeout(() => {
-                scrollToBottom();
-            });
+        setTimeout(() => {
+            scrollToBottom();
+        });
 
-            isInputDisabled.value = false;
-            okToSend.value = true;
-            ////console.log(okToSend.value)
-        })
+        isInputDisabled.value = false;
+        okToSend.value = true;
+        ////console.log(okToSend.value)
+    })
         .catch((err) => {
             totast("聊天服务端错误", "error");
             isInputDisabled.value = false;

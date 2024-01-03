@@ -6,7 +6,7 @@
     </div>
     <img src="../assets/images/logo.png" alt="" class="sign">
     <el-select v-model="language" placeholder="一键翻译" id="chooseBox"
-      style="width: 100px; height: 50px;   position: absolute; right: 200px; top: 10px ;" @change="change">
+      style="width: 100px; height: 50px;   position: absolute; right: 100px; top: 10px ;" @change="change">
       <el-option label="中文" value="chinese" />
       <el-option label="英文" value="english" />
     </el-select>
@@ -885,6 +885,7 @@ li.right {
 }
 
 /deep/.el-input-group__append {
+width: 100%;
   padding: 0;
   border-radius: 10px;
   display: flex;
