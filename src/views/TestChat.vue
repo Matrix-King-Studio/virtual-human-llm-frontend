@@ -2,7 +2,8 @@
     <div class="main">
         <img src="../assets/images/logo.png" alt="" class="sign">
         <!-- <el-button @click="deletecontent" style="position: absolute; right: 100px; top: 10px">清空对话</el-button> -->
-        <el-button @click="deletecontent" :disabled="isInputDisabled" style="position: absolute; right: 10px; top: 10px">清空对话</el-button>
+        <el-button @click="deletecontent" :disabled="isInputDisabled"
+            style="position: absolute; right: 10px; top: 10px">清空对话</el-button>
         <div class="box">
             <div class="chatFrame" v-show="true">
                 <!-- <h1 :title="titlebiaoti.value">123</h1> -->
@@ -162,6 +163,9 @@ function logout() {
     totast("退出成功", "success");
     router.push("/login");
 }
+
+
+
 
 onMounted(async () => {
     const token = getToken();
@@ -374,6 +378,9 @@ const handleThumbDown = debounce((index) => {
         });
 }, 500);
 
+
+
+
 // 重新生成函数调用返回值
 const repeated = debounce((index) => {
     // 获取问题
@@ -401,6 +408,7 @@ const repeated = debounce((index) => {
     //     url: "/search_web",
     //     data: messages,
     // }).then((response) => {
+    const access_token = getAccessToken();
     axios({
         method: "post",
         headers: {
@@ -657,35 +665,35 @@ let splitResult;
 let arrWithNews;
 let arrWithoutNews;
 
-// function getAccessToken() {
-//   try {
-//     const token = JSON.parse(localStorage.getItem('token'));
-//     const {access_token} = token;
-//     return access_token;
-//   } catch (error) {
-//     axios({
-//       method: 'post',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       url: '/baidubce/oauth/2.0/token',
-//       params: {
-//         grant_type: 'client_credentials',
-//         client_id: 'rG08BZZ7TfDqLQjkjyo9qqq1',
-//         client_secret: '3xXms40qc5WRG2RoQkagrCb18mFQTQtf',
-//       },
-//     }).then(response => {
-//       const {data} = response;
-//       localStorage.setItem('token', JSON.stringify(data));
-//       const token = JSON.parse(localStorage.getItem('token'));
-//       const {access_token} = token;
-//       return access_token;
-//     });
-//   }
-//   const token = JSON.parse(localStorage.getItem('token'));
-//   const {access_token} = token;
-//   return access_token;
-// }
+function getAccessToken() {
+    try {
+        const token = JSON.parse(localStorage.getItem('token'));
+        const { access_token } = token;
+        return access_token;
+    } catch (error) {
+        axios({
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            url: '/baidubce/oauth/2.0/token',
+            params: {
+                grant_type: 'client_credentials',
+                client_id: 'rG08BZZ7TfDqLQjkjyo9qqq1',
+                client_secret: '3xXms40qc5WRG2RoQkagrCb18mFQTQtf',
+            },
+        }).then(response => {
+            const { data } = response;
+            localStorage.setItem('token', JSON.stringify(data));
+            const token = JSON.parse(localStorage.getItem('token'));
+            const { access_token } = token;
+            return access_token;
+        });
+    }
+    const token = JSON.parse(localStorage.getItem('token'));
+    const { access_token } = token;
+    return access_token;
+}
 
 // 调用南开虚拟人的回答问题的接口
 function chatWithAi({ content }) {
@@ -702,28 +710,28 @@ function chatWithAi({ content }) {
     const textwaitting = "正在为您查询中...";
 
     subtitleRef.value = textwaitting;
-    axios({
-        method: "post",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        url: "/search_web",
-        data: messages,
-    })
-        .then((response) => {
-    // const access_token = getAccessToken();
     // axios({
     //     method: "post",
     //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Accept': 'application/json',
+    //         "Content-Type": "application/json",
     //     },
-    //     url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
-    //     params: {
-    //         access_token,
-    //     },
+    //     url: "/search_web",
     //     data: messages,
-    // }).then((response) => {
+    // })
+    //     .then((response) => {
+    const access_token = getAccessToken();
+    axios({
+        method: "post",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
+        params: {
+            access_token,
+        },
+        data: messages,
+    }).then((response) => {
         ////////成功之后执行下方的回调
         const { data } = response;
         const { status, result, source, history } = data;

@@ -326,14 +326,27 @@ const repeated = debounce((index) => {
   const textwaitting = "正在为您查询中...";
   itemTimeRef.value[index + 1].innerHTML = textwaitting;
   // 调用南开的值，进行重新查询
-  axios({
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    url: "/search_web",
-    data: messages,
-  }).then((response) => {
+  // axios({
+  //   method: "post",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   url: "/search_web",
+  //   data: messages,
+  // }).then((response) => {
+    const access_token = getAccessToken();
+    axios({
+        method: "post",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
+        params: {
+            access_token,
+        },
+        data: messages,
+    }).then((response) => {
     // //console.log("$$$$$$")
     // //console.log(response)
     const { data } = response;
