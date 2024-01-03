@@ -28,9 +28,7 @@
         </el-form-item>
       </el-form>
       <div class="link-box">
-
         <span></span>
-
         <span><router-link to="/register" style="color: black; " > 注册账号</router-link></span>
       </div>
     </div>

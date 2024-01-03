@@ -4,7 +4,9 @@
       style="height: 50px; position: absolute; left: 20px; top: 10px ;background-color: red; display: none; width: 20px;height: 20px;">
       0
     </div>
-    <img src="../assets/images/logo.png" alt="" class="sign">
+    <router-link to="/">
+      <img src="../assets/images/logo.png" alt="" class="sign">
+    </router-link>
     <el-select v-model="language" placeholder="一键翻译" id="chooseBox"
       style="width: 100px; height: 50px;   position: absolute; right: 100px; top: 10px ;" @change="change">
       <el-option label="中文" value="chinese" />
@@ -644,7 +646,6 @@ function chatWithAi({ content }) {
     data: messages,
   })
     .then((response) => {
-
       const { data } = response;
       const { status, result, source, history } = data;
       arrWithNews = source.filter(
@@ -653,9 +654,7 @@ function chatWithAi({ content }) {
       arrWithoutNews = source.filter(
         (obj) => !obj.hasOwnProperty("news") || !obj.news
       );
-
       finalSource = source;
-
 
       // if (status != 200) {
       //   ElMessage({message: result, type: "error"});

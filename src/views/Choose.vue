@@ -2,7 +2,9 @@
     <div class="main_container">
         <el-button @click="logout" style="position: absolute; right: 10px; top: 10px">退出登录</el-button>
         <!-- <img class="sign"  src="../src/assets/logo.png" /> -->
+      <router-link to="/">
         <img src="../assets/images/logo.png" alt="" class="sign">
+      </router-link>
         <div class="main">
             <h1>请选择你要进入的页面</h1>
             <router-link to="/home">   虚拟人 </router-link>

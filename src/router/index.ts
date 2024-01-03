@@ -26,10 +26,6 @@ const routes = [
         component: () => import('../views/Register.vue'),  // 路由的组件
     },
     {
-        path: '/test',
-        component: () => import('../views/Test.vue'),  // 路由的组件
-    },
-    {
         path: '/chat',
         component: () => import('../views/Chat.vue'),  // 路由的组件
     },
