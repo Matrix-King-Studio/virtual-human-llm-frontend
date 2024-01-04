@@ -179,55 +179,47 @@ onMounted(async () => {
     localStorage.setItem('userID', userID);
   }
 
-  try {
-    registration(userID, "2889015731@qq.com", "123456", "123456").then((res) => {
+
+  registration(userID, "2889015731@qq.com", "123456", "123456").then((res) => {
+    console.log(res);
+    sign(userID, "123456").then((res) => {
       console.log(res);
-      sign(userID, "123456").then((res) => {
+      totast("登陆成功！！欢迎！！", "success");
+      setToken(res.key);
+      user(getToken()).then((res) => {
         console.log(res);
-        totast("登陆成功！！欢迎！！", "success");
-        setToken(res.key);
+        user_id = res.pk;
+        //days = 1;
+        // 在此基础上进行调用历史记录的接口,主要是为了进行刷新页面，将这个重新进行渲染
+        historyInfo(user_id, days).then((res) => {
+          console.log(res.data)
+          const historyInformation = res.data.map((element) => {
+            return {
+              content: element.content,
+              time: element.time,
+              status: element.status,
+              role: element.role,
+              source: element.role
+            };
+          });
+          info.value = historyInformation;
+          setTimeout(() => {
+            scrollToBottom();
+          });
+        }).catch((error) => {
+          console.error("historyInfo error", error);
+        });
+      }).catch((error) => {
+        console.error("user error", error);
       });
+    }).catch((error) => {
+      console.error("sign error", error);
     });
-  } catch (registrationError) {
-    try {
-      sign(userID, "123456").then((res) => {
-        console.log(res);
-        totast("登陆成功！！欢迎！！", "success");
-        setToken(res.key);
-      });
-    } catch (signError) {
-      console.error('Error during sign:', signError);
-    }
-  }
+  }).catch((error) => {
+    console.error("registration error", error);
+  });
 
-  try {
-    const response = await user(getToken());
-    user_id = response.pk;
 
-    const historyResponse = await historyInfo(user_id, days);
-    const historyInformation = historyResponse.data.map((element) => {
-      return {
-        content: element.content,
-        time: element.time,
-        status: element.status,
-        role: element.role,
-        source: element.source
-      };
-    });
-
-    const historySource = historyResponse.data.map((element) => {
-      return {
-        source: element.source
-      };
-    });
-
-    info.value = historyInformation;
-    setTimeout(() => {
-      scrollToBottom();
-    });
-  } catch (userError) {
-    console.error('Error during user:', userError);
-  }
   handleResize();
 });
 
