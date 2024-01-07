@@ -685,27 +685,27 @@ function chatWithAi({content}) {
   const textwaitting = "正在为您查询中...";
 
   subtitleRef.value = textwaitting;
-  // axios({
-  //   method: "post",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   url: "/search_web",
-  //   data: messages,
-  // })
-  const access_token = getAccessToken();
   axios({
     method: "post",
     headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      "Content-Type": "application/json",
     },
-    url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
-    params: {
-      access_token,
-    },
+    url: "/search_web",
     data: messages,
   })
+  // const access_token = getAccessToken();
+  // axios({
+  //   method: "post",
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //   },
+  //   url: `/baidubce/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/eb-instant`,
+  //   params: {
+  //     access_token,
+  //   },
+  //   data: messages,
+  // })
       .then((response) => {
         ////////成功之后执行下方的回调
         const {data} = response;
