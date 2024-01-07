@@ -41,7 +41,7 @@ export default defineConfig({
             },
             // 配置跨域问题
             '/api': {
-                target: 'http://121.37.67.75:10033/',
+                target: 'http://39.99.254.148:10002/',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ''),
             }
