@@ -27,26 +27,53 @@
                                 </span>
                             </div>
                             <div v-if="item.role === 'virtual_human'" class="optionIcon">
-                                <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                    style="cursor: pointer" @click="handleThumbUp(index)"
-                                    :class="item.status === 'upvote' ? 'upvote' : null" ref="svgRef">
-                                    <path fill-rule="nonzero" clip-rule="evenodd"
-                                        d="M12.1318 2.50389C12.3321 2.15338 12.7235 1.95768 13.124 2.00775L13.5778 2.06447C16.0449 2.37286 17.636 4.83353 16.9048 7.20993L16.354 8.99999H17.0722C19.7097 8.99999 21.6253 11.5079 20.9313 14.0525L19.5677 19.0525C19.0931 20.7927 17.5124 22 15.7086 22H6C4.34315 22 3 20.6568 3 19V12C3 10.3431 4.34315 8.99999 6 8.99999H8C8.25952 8.99999 8.49914 8.86094 8.6279 8.63561L12.1318 2.50389ZM10 20H15.7086C16.6105 20 17.4008 19.3964 17.6381 18.5262L19.0018 13.5262C19.3488 12.2539 18.391 11 17.0722 11H15C14.6827 11 14.3841 10.8494 14.1956 10.5941C14.0071 10.3388 13.9509 10.0092 14.0442 9.70591L14.9932 6.62175C15.3384 5.49984 14.6484 4.34036 13.5319 4.08468L10.3644 9.62789C10.0522 10.1742 9.56691 10.5859 9 10.8098V19C9 19.5523 9.44772 20 10 20ZM7 11V19C7 19.3506 7.06015 19.6872 7.17071 20H6C5.44772 20 5 19.5523 5 19V12C5 11.4477 5.44772 11 6 11H7Z">
-                                    </path>
-                                </svg>
+                                <div :class="item.status === 'upvote' ? 'upvote' : null" ref="svgRef"
+                                    style="padding: 0; border: none; background-color: white; cursor: pointer; "
+                                    @click="handleThumbUp(index)">
+                                    <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                        v-show="item.status !== 'upvote'"
+                                        :class="item.status === 'upvote' ? 'upvote' : null" ref="svgRef">
+                                        <path fill-rule="nonzero" clip-rule="evenodd"
+                                            d="M12.1318 2.50389C12.3321 2.15338 12.7235 1.95768 13.124 2.00775L13.5778 2.06447C16.0449 2.37286 17.636 4.83353 16.9048 7.20993L16.354 8.99999H17.0722C19.7097 8.99999 21.6253 11.5079 20.9313 14.0525L19.5677 19.0525C19.0931 20.7927 17.5124 22 15.7086 22H6C4.34315 22 3 20.6568 3 19V12C3 10.3431 4.34315 8.99999 6 8.99999H8C8.25952 8.99999 8.49914 8.86094 8.6279 8.63561L12.1318 2.50389ZM10 20H15.7086C16.6105 20 17.4008 19.3964 17.6381 18.5262L19.0018 13.5262C19.3488 12.2539 18.391 11 17.0722 11H15C14.6827 11 14.3841 10.8494 14.1956 10.5941C14.0071 10.3388 13.9509 10.0092 14.0442 9.70591L14.9932 6.62175C15.3384 5.49984 14.6484 4.34036 13.5319 4.08468L10.3644 9.62789C10.0522 10.1742 9.56691 10.5859 9 10.8098V19C9 19.5523 9.44772 20 10 20ZM7 11V19C7 19.3506 7.06015 19.6872 7.17071 20H6C5.44772 20 5 19.5523 5 19V12C5 11.4477 5.44772 11 6 11H7Z">
+                                        </path>
+                                    </svg>
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="15" height="20"
+                                        v-show="item.status === 'upvote'">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M13.6 9.6V6.4A2.4 2.4 0 0 0 11.2 4L8 11.2V20h9.024a1.6 1.6 0 0 0 1.6-1.36l1.104-7.2a1.6 1.6 0 0 0-1.6-1.84H13.6ZM8 20H5.6A1.6 1.6 0 0 1 4 18.4v-5.6a1.6 1.6 0 0 1 1.6-1.6H8V20Z">
+                                        </path>
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M10.286 3.594A1 1 0 0 1 11.2 3a3.4 3.4 0 0 1 3.4 3.4v2.2h3.523a2.6 2.6 0 0 1 2.594 2.99l-1.104 7.2A2.601 2.601 0 0 1 17.019 21H5.6A2.6 2.6 0 0 1 3 18.4v-5.6a2.6 2.6 0 0 1 2.6-2.6h1.75l2.936-6.606ZM7 12.2H5.6a.6.6 0 0 0-.6.6v5.6a.6.6 0 0 0 .6.6H7v-6.8ZM9 19v-7.588l2.792-6.281A1.4 1.4 0 0 1 12.6 6.4v3.2a1 1 0 0 0 1 1h4.539a.6.6 0 0 1 .6.69c0-.001 0 0 0 0l-1.104 7.2a.6.6 0 0 1-.6.51H9Z">
+                                        </path>
+                                    </svg>
 
-                                <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                    :class="item.status === 'downvote' ? 'downvote' : null"
-                                    style="cursor: pointer; margin-left: 7px" @click="handleThumbDown(index)" ref="svgRef">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M11.8727 21.4961C11.6725 21.8466 11.2811 22.0423 10.8805 21.9922L10.4267 21.9355C7.95958 21.6271 6.36855 19.1665 7.09975 16.7901L7.65054 15H6.93226C4.29476 15 2.37923 12.4921 3.0732 9.94753L4.43684 4.94753C4.91145 3.20728 6.49209 2 8.29589 2H18.0045C19.6614 2 21.0045 3.34315 21.0045 5V12C21.0045 13.6569 19.6614 15 18.0045 15H16.0045C15.745 15 15.5054 15.1391 15.3766 15.3644L11.8727 21.4961ZM14.0045 4H8.29589C7.39399 4 6.60367 4.60364 6.36637 5.47376L5.00273 10.4738C4.65574 11.746 5.61351 13 6.93226 13H9.00451C9.32185 13 9.62036 13.1506 9.8089 13.4059C9.99743 13.6612 10.0536 13.9908 9.96028 14.2941L9.01131 17.3782C8.6661 18.5002 9.35608 19.6596 10.4726 19.9153L13.6401 14.3721C13.9523 13.8258 14.4376 13.4141 15.0045 13.1902V5C15.0045 4.44772 14.5568 4 14.0045 4ZM17.0045 13V5C17.0045 4.64937 16.9444 4.31278 16.8338 4H18.0045C18.5568 4 19.0045 4.44772 19.0045 5V12C19.0045 12.5523 18.5568 13 18.0045 13H17.0045Z"
-                                        fill="currentColor"></path>
-                                </svg>
+                                </div>
+                                <div :class="item.status === 'downvote' ? 'downvote' : null" style=" cursor: pointer; margin-left: 6px ; padding: 0; background-color: white;
+                                    border: none;
+                                    " @click="handleThumbDown(index)" ref="svgRef">
+
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="15" height="20"
+                                        v-show="item.status !== 'downvote'">
+                                        <path
+                                            d="M11.2 21a1 1 0 0 1-.914-.594L7.351 13.8H5.6a2.615 2.615 0 0 1-1.838-.761A2.59 2.59 0 0 1 3 11.2V5.6c0-.685.277-1.354.762-1.838A2.615 2.615 0 0 1 5.6 3h11.707a2.6 2.6 0 0 1 2.561 2.21l1.103 7.198c.057.369.031.755-.072 1.115a2.61 2.61 0 0 1-1.432 1.648 2.615 2.615 0 0 1-1.096.228H14.6v2.2c0 .907-.354 1.761-.994 2.403A3.38 3.38 0 0 1 11.2 21ZM9 12.587l2.792 6.282a1.401 1.401 0 0 0 .807-1.27v-3.2a1 1 0 0 1 1-1h4.783c.08-.009.184-.017.264-.052a.607.607 0 0 0 .33-.38.617.617 0 0 0 .018-.256l-1.104-7.2A.598.598 0 0 0 17.298 5H9v7.587ZM5.6 5a.6.6 0 0 0-.6.6v5.6a.599.599 0 0 0 .6.6H7V5H5.6Z">
+                                        </path>
+                                    </svg>
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="15" height="20"
+                                        v-show="item.status === 'downvote'">
+                                        <path
+                                            d="M6 3h-.4c-.684 0-1.354.277-1.838.762A2.62 2.62 0 0 0 3 5.6v5.6c0 .684.277 1.354.761 1.837A2.616 2.616 0 0 0 5.6 13.8H6V3ZM20.971 12.408l-1.103-7.197A2.603 2.603 0 0 0 17.304 3H8v12l2.286 5.406A1 1 0 0 0 11.2 21c.908 0 1.162-.354 1.806-.997.64-.643.994-1.496.994-2.403v-2.2h4.374a2.39 2.39 0 0 0 1.092-.229 2.613 2.613 0 0 0 1.432-1.647 2.63 2.63 0 0 0 .073-1.116Z">
+                                        </path>
+                                    </svg>
+
+                                </div>
+
+
+
                                 <svg width="15" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
                                     style="cursor: pointer; margin-left: 7px" @click="repeated(index - 1)" ref="svgRef">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z"
-                                        fill="currentColor"></path>
+                                        d="M4.5 2.5C5.05228 2.5 5.5 2.94772 5.5 3.5V5.07196C7.19872 3.47759 9.48483 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C7.1307 21.5 3.11828 17.8375 2.565 13.1164C2.50071 12.5679 2.89327 12.0711 3.4418 12.0068C3.99033 11.9425 4.48712 12.3351 4.5514 12.8836C4.98798 16.6089 8.15708 19.5 12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C9.7796 4.5 7.7836 5.46469 6.40954 7H9C9.55228 7 10 7.44772 10 8C10 8.55228 9.55228 9 9 9H4.5C3.96064 9 3.52101 8.57299 3.50073 8.03859C3.49983 8.01771 3.49958 7.99677 3.5 7.9758V3.5C3.5 2.94772 3.94771 2.5 4.5 2.5Z">
+                                    </path>
                                 </svg>
 
                                 <svg t="1702787092946" style="cursor: pointer; margin-left: 7px" class="icon"
@@ -74,9 +101,6 @@
                         <el-table row-key="id" :data="arrWithoutNews" style="width: 100%" stripe>
                             <el-table-column type="index" label=" " width="50" />
                             <el-table-column prop="query" label="相关问题" width="250" />
-                            <!-- <el-table-column prop="author" label="作者" width="150" />
-  <el-table-column prop="time" label="时间" width="100" />
-  <el-table-column prop="if" label="影响因子" width="100" /> -->
                             <el-table-column fixed="right" prop="answer" label="摘要" width="100">
                                 <template #default="scope">
                                     <el-button link type="primary" size="small" @click="abstractDrawer(scope.$index)">
@@ -85,7 +109,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-drawer v-model="abstracter" append-to-body class="abstract_bgc">
+                        <el-drawer v-model="abstracter" append-to-body class="abstract_bgc" :size="drawerSize">
                             <h3 class="abstract_title">
                                 {{ arrWithoutNews[selectedIndex].query }}
                             </h3>
@@ -109,7 +133,7 @@
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-drawer v-model="newser" append-to-body class="abstract_bgc">
+                        <el-drawer v-model="newser" append-to-body class="abstract_bgc" :size="drawerSize">
                             <div class="news_link_title">
                                 <a :href="arrWithNews[selectedIndex].ref" target="_blank" class="news_link">
                                     {{ arrWithNews[selectedIndex].title }}
@@ -123,8 +147,8 @@
                     </div>
                 </el-drawer>
                 <div class="sendBox">
-                    <el-input v-model="msg" :disabled="isInputDisabled" placeholder="请输入想提问的问题" class="input-with-select"
-                        id="result" @keyup.enter="sendmsg">
+                    <el-input ref="myInput" v-model="msg" :disabled="isInputDisabled" placeholder="请输入想提问的问题"
+                        class="input-with-select" id="result" @keyup.enter="sendmsg">
                         <!-- :suffix-icon="Microphone" -->
                         <template #append>
                             <el-button @click="sendmsg" type="primary" style="padding-right: 10px">
@@ -160,6 +184,7 @@ import { getToken, setToken, removeToken } from "../composables/auth";
 
 import { getColumnByCell } from "element-plus/es/components/table/src/util";
 
+const myInput = ref(null);
 // 退出登录操作
 function logout() {
     removeToken();
@@ -168,7 +193,7 @@ function logout() {
 }
 
 
-onMounted( () => {
+onMounted(() => {
     function generateUniqueID() {
         return 'user_' + Math.random().toString(36).substr(2, 9);
     }
@@ -199,7 +224,7 @@ onMounted( () => {
                             time: element.time,
                             status: element.status,
                             role: element.role,
-                            source: element.role
+                            source: element.source
                         };
                     });
                     info.value = historyInformation;
@@ -234,7 +259,8 @@ onMounted( () => {
                             time: element.time,
                             status: element.status,
                             role: element.role,
-                            source: element.role
+                            source: element.source
+
                         };
                     });
                     info.value = historyInformation;
@@ -254,34 +280,38 @@ onMounted( () => {
 
 
     handleResize();
+
+    myInput.value.focus();
 });
 
 
 // 定义清空聊天记录对话的功能
 function deletecontent() {
+    const time = [];
     const token = getToken();
     console.log(info.value.length)
     user(token).then((response) => {
         user_id = response.pk;
+        console.log(info.value)
         // 使用函数进行遍历
         for (let i = 0; i < info.value.length; i++) {
-            time = info.value[i].time
-            // 每一轮循环都要调用删除的这个函数的接口
-            deleteContent(user_id, time).then((res) => {
-                // console.log(res)
-                info.value = [];
-                // window.location.reload()
-            });
+            time[i] = info.value[i].time
         }
-    });
+        console.log(time)
+        // 每一轮循环都要调用删除的这个函数的接口
+        deleteContent(user_id, time).then((res) => {
+            console.log("删除成功！！！")
+            info.value = [];
+        })
+    })
+
+
     totast("清空对话成功", 'success')
 }
-
 
 //历史文献与相关资讯抽屉控制开关
 let abstractBox = ref(false);
 let newsBox = ref(false);
-
 
 // 历史文献的开关的函数
 const abstractBoxShow = debounce((index) => {
@@ -291,7 +321,7 @@ const abstractBoxShow = debounce((index) => {
     // const itemId = itemTimeRef.value[index]?.getAttribute("title");
     //console.log(info.value[index].source)
     const sourceFinal = info.value[index].source
-
+    console.log(sourceFinal)
     arrWithoutNews = sourceFinal.filter(
         (obj) => !obj.hasOwnProperty("news") || !obj.news
     );
@@ -307,7 +337,7 @@ const newsBoxShow = debounce((index) => {
     // const itemId = itemTimeRef.value[index]?.getAttribute("title");
     //console.log(info.value[index].source)
     const sourceFinal = info.value[index].source
-
+    console.log(sourceFinal)
     arrWithNews = sourceFinal.filter(
         (obj) => obj.hasOwnProperty("news") && obj.news
     );
@@ -349,7 +379,7 @@ const handleThumbUp = debounce((index) => {
                     time: element.time,
                     status: element.status,
                     role: element.role,
-                    source: element.role
+                    source: element.source
                 };
             });
             info.value = historyInformation;
@@ -588,6 +618,7 @@ const sendMsg = debounce(() => {
     // //////console.log("不能发送性能消息")
     if (msg.value.length < 1) {
         isInputDisabled.value = false;
+        myInput.value.focus();
         return ElMessage({ message: "不能发送空消息！", type: "error" });
     }
     // //////console.log(okToSend.value, "@@@@@@@@@@@@@@@");
@@ -762,13 +793,13 @@ function chatWithAi({ content }) {
             const { status, result, source, history } = data;
             //console.log(source)
             // arrWithNews = source.filter(
-            //   (obj) => obj.hasOwnProperty("news") && obj.news
+            //     (obj) => obj.hasOwnProperty("news") && obj.news
             // );
             // arrWithoutNews = source.filter(
-            //   (obj) => !obj.hasOwnProperty("news") || !obj.news
+            //     (obj) => !obj.hasOwnProperty("news") || !obj.news
             // );
-            //console.log(arrWithNews)
-            //console.log(arrWithoutNews)
+            // console.log(arrWithNews)
+            // console.log(arrWithoutNews)
             finalSource = source;
 
             // if (status != 200) {
@@ -826,12 +857,16 @@ function chatWithAi({ content }) {
             });
 
             isInputDisabled.value = false;
+
+            // enableInput()
+            myInput.value.focus();
             okToSend.value = true;
             ////console.log(okToSend.value)
         })
         .catch((err) => {
             totast("聊天服务端错误", "error");
             isInputDisabled.value = false;
+            myInput.value.focus();
         });
 }
 
@@ -839,7 +874,7 @@ const subtitleRef = ref("");
 
 //延时函数
 let index = 0;
-let time;
+// let time;
 // 设置点赞和踩的更新
 
 //设置滚动到底部的函数
@@ -956,11 +991,11 @@ li.virtual_human .msg-evaluate {
 }
 
 .upvote path {
-    fill: blue;
+    fill: black;
 }
 
 .downvote path {
-    fill: blue;
+    fill: black;
 }
 
 .null path {
@@ -1029,7 +1064,6 @@ li.user span {
     }
 }
 
-
 .main {
     display: flex;
     flex-direction: column;
@@ -1037,6 +1071,8 @@ li.user span {
     align-items: center;
     height: 100%;
     width: 100%;
+
+
 
     .box {
         display: flex;
@@ -1093,8 +1129,6 @@ li.user span {
 }
 
 @media only screen and (max-width: 768px) {
-
-
     .sign {
         height: 5%;
         position: absolute;
@@ -1115,6 +1149,12 @@ li.user span {
         padding: 0 5px;
     }
 
+    .el-overlay {
+        div {
+            width: 100% !important;
+        }
+    }
+
 
     .main {
         display: flex;
@@ -1124,6 +1164,8 @@ li.user span {
         height: 110%;
         // border: 1px solid #000;
         margin: 10px;
+
+
 
         .box {
             display: flex;
